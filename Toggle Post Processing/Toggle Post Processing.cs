@@ -12,7 +12,7 @@ namespace Toggle_PostProcessing
         public const string DownloadLink = "https://github.com/Arion-Kun/TogglePostProcessing/releases/";
         public const string Name = "Toggle Post Processing";
 
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.2";
     }
     public sealed class TogglePostProcessing : MelonMod
     {
