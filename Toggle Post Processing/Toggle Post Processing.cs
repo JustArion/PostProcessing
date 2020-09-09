@@ -1,8 +1,7 @@
-﻿using System.Linq;
-using Il2CppSystem.Collections.Generic;
+﻿using System;
 using MelonLoader;
 using UnityEngine.Rendering.PostProcessing;
-
+using System.Collections.Generic;
 
 namespace Toggle_PostProcessing
 {
@@ -47,32 +46,48 @@ namespace Toggle_PostProcessing
 
         private static void GrabWorldVolumes() //Credits to Psychloor for Method
         {
-            OriginalVolumes = new List<OriginalVolume>();
-            foreach (var volume in UnityEngine.Object.FindObjectsOfType<PostProcessVolume>())
+            try
             {
-                OriginalVolumes.Add(new OriginalVolume() { postProcessVolume = volume, defaultState = volume.enabled });
+                OriginalVolumes = new List<OriginalVolume>();
+                foreach (var volume in UnityEngine.Object.FindObjectsOfType<PostProcessVolume>())
+                {
+                    OriginalVolumes.Add(new OriginalVolume() { postProcessVolume = volume, defaultState = volume.enabled });
+                }
             }
+            catch (Exception e)
+            { MelonLogger.LogError("GrabWorldVolumes Error: " + e); }
+
         }
         private static void Reset() //Credits to Psychloor for Method
         {
-            foreach (OriginalVolume originalVolume in OriginalVolumes)
-            {
-                originalVolume.postProcessVolume.enabled = originalVolume.defaultState;
-            }
-        }
-        private static void ToggleMethod(bool value)
-        {
-            if (value)
+            try
             {
                 foreach (OriginalVolume originalVolume in OriginalVolumes)
                 {
-                    originalVolume.postProcessVolume.enabled = !value;
+                    originalVolume.postProcessVolume.enabled = originalVolume.defaultState;
                 }
             }
-            else
+            catch (Exception e)
+            { MelonLogger.LogError("Reset Error: " + e); }
+        }
+        private static void ToggleMethod(bool value)
+        {
+            try
             {
-                Reset();
+                if (value)
+                {
+                    foreach (OriginalVolume originalVolume in OriginalVolumes)
+                    {
+                        originalVolume.postProcessVolume.enabled = !value;
+                    }
+                }
+                else
+                {
+                    Reset();
+                }
             }
+            catch (Exception e)
+            { MelonLogger.LogError("ToggleMethod Error: " + e);}
         }
     }
 }
