@@ -7,7 +7,7 @@ using BuildInfo = Toggle_PostProcessing.BuildInfo;
 [assembly: AssemblyTitle(BuildInfo.Name)]
 [assembly: AssemblyDescription("A Melon Mod for VRChat that adds the option to disable Post Processing in Worlds.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany(BuildInfo.Company)]
 [assembly: AssemblyProduct(BuildInfo.Name)]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
