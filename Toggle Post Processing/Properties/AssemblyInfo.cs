@@ -1,8 +1,8 @@
 ﻿using MelonLoader;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Toggle_PostProcessing;
-using BuildInfo = Toggle_PostProcessing.BuildInfo;
+using TogglePostProcessing;
+using BuildInfo = TogglePostProcessing.BuildInfo;
 
 [assembly: AssemblyTitle(BuildInfo.Name)]
 [assembly: AssemblyDescription("")]
@@ -20,5 +20,5 @@ using BuildInfo = Toggle_PostProcessing.BuildInfo;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: MelonInfo(typeof(TogglePostProcessing), BuildInfo.Name, BuildInfo.Version, BuildInfo.Author, BuildInfo.DownloadLink)]
+[assembly: MelonInfo(typeof(TogglePostProcessing.TogglePostProcessing), BuildInfo.Name, BuildInfo.Version, BuildInfo.Author, BuildInfo.DownloadLink)]
 [assembly: MelonGame("VRChat", "VRChat")]

@@ -65,8 +65,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Toggle Post Processing.cs" />
+    <Compile Include="Bloom.cs" />
+    <Compile Include="Night Mode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Toggle Post Processing.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
