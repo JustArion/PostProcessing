@@ -6,6 +6,7 @@ using MelonLoader;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using System.Threading.Tasks;
+using Object = UnityEngine.Object;
 
 namespace TogglePostProcessing
 {
@@ -29,11 +30,11 @@ namespace TogglePostProcessing
                 //if (!NightMode1Bool && !NightMode2Bool && !NightMode3Bool) { NightModeEnum = EnumNightMode.Null; }
                 //else 
                 if (NightMode1Bool) { NightModeEnum = EnumNightMode.NightMode1; }
-                else { UnityEngine.Object.Destroy(NightMode1); }
+                else { Object.Destroy(NightMode1); }
                 if (NightMode2Bool) { NightModeEnum = EnumNightMode.NightMode2; }
-                else { UnityEngine.Object.Destroy(NightMode2); }
+                else { Object.Destroy(NightMode2); }
                 if (NightMode3Bool) { NightModeEnum = EnumNightMode.NightMode3; }
-                else { UnityEngine.Object.Destroy(NightMode3); }
+                else { Object.Destroy(NightMode3); }
             }
             catch (Exception e)
             {
@@ -42,10 +43,10 @@ namespace TogglePostProcessing
         }
         public void ApplyNightMode()
         {
-            ApplyNightEnum();
             NightMode1.layer = 8; // Setting the layer to 8 is the PostProcessing layer.
             NightMode2.layer = 8;
             NightMode3.layer = 8;
+            ApplyNightEnum();
             switch (NightModeEnum)
             {
                 case EnumNightMode.NightMode1:
