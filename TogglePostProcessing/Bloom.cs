@@ -1,6 +1,7 @@
 using MelonLoader;
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace TogglePostProcessing
 {
@@ -19,13 +20,13 @@ namespace TogglePostProcessing
             try
             {
                 if (Bloom1Bool) { BloomEnum = EnumBloom.BloomLow; }
-                else { UnityEngine.Object.Destroy(BloomObj); }
+                else { Object.Destroy(BloomObj); }
                 if (Bloom2Bool) { BloomEnum = EnumBloom.BloomMedium; }
-                else { UnityEngine.Object.Destroy(BloomObj); }
+                else { Object.Destroy(BloomObj); }
                 if (Bloom3Bool) { BloomEnum = EnumBloom.BloomHigh; }
-                else { UnityEngine.Object.Destroy(BloomObj); }
+                else { Object.Destroy(BloomObj); }
                 if (Bloom4Bool) { BloomEnum = EnumBloom.BloomCustom; }
-                else { UnityEngine.Object.Destroy(BloomObj); }
+                else { Object.Destroy(BloomObj); }
             }
             catch (Exception e)
             {
@@ -34,6 +35,7 @@ namespace TogglePostProcessing
         }
         public void ApplyBloom()
         {
+            BloomObj.layer = 8; // Setting the layer to 8 is the PostProcessing layer.
             ApplyBloomEnum();
             switch (BloomEnum)
             {
