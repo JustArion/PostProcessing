@@ -35,25 +35,38 @@ namespace TogglePostProcessing
         }
         public void ApplyBloom()
         {
+            GameObject BloomObj = new GameObject();
             BloomObj.layer = 8; // Setting the layer to 8 is the PostProcessing layer.
             ApplyBloomEnum();
             switch (BloomEnum)
             {
                 case EnumBloom.BloomLow:
+                    UnTickAllExcept(Bloom1Bool);
                     MelonLogger.Log("Bloom - Low Applied.");
                     break;
                 case EnumBloom.BloomMedium:
+                    UnTickAllExcept(Bloom2Bool);
                     MelonLogger.Log("Bloom - Medium Applied.");
                     break;
                 case EnumBloom.BloomHigh:
+                    UnTickAllExcept(Bloom3Bool);
                     MelonLogger.Log("Bloom - High Applied.");
                     break;
                 case EnumBloom.BloomCustom:
+                    UnTickAllExcept(Bloom4Bool);
                     MelonLogger.Log("Bloom - Custom Applied.");
                     break;
                 default:
                     break;
             }
+        }
+        public void UnTickAllExcept(bool Bloom)
+        {
+            Bloom1Bool = false;
+            Bloom2Bool = false;
+            Bloom3Bool = false;
+            Bloom4Bool = false;
+            Bloom = true;
         }
         public enum EnumBloom
         {
