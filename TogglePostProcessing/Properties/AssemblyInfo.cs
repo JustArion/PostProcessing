@@ -22,3 +22,6 @@ using BuildInfo = TogglePostProcessing.BuildInfo;
 
 [assembly: MelonInfo(typeof(TogglePostProcessing.TogglePostProcessing), BuildInfo.Name, BuildInfo.Version, BuildInfo.Author, BuildInfo.DownloadLink)]
 [assembly: MelonGame("VRChat", "VRChat")]
+
+//Optional Dependencies
+[assembly: MelonOptionalDependencies("UIExpansionKit")] 

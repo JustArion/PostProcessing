@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>Release\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;//OnePointOne, QM</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;//TwoPointZero, QM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp, Version=3.7.1.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DayClientMl2\DayClientML2\bin\Debug\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
@@ -78,9 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bloom.cs" />
+    <Compile Include="ButtonAPI\RubyButtonAPI.cs" />
     <Compile Include="Night Mode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Custom\RubyButtonAPI.cs" />
     <Compile Include="TogglePostProcessing.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
