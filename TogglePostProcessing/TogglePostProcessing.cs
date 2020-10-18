@@ -18,7 +18,7 @@ namespace TogglePostProcessing
 
         public const string Name = "TogglePostProcessing";
 
-        public const string Version = "1.0.4 Build 2";
+        public const string Version = "1.1.0";
 
     }
     public class TogglePostProcessing : MelonMod
@@ -37,7 +37,7 @@ namespace TogglePostProcessing
             MelonPrefs.RegisterBool("TogglePostProcessing", "DisablePostProcessing", false, "Disable Post Processing");
             //QM Stuff
             MelonPrefs.RegisterBool("TogglePostProcessing", "QMToggle", true, "QuickMenu Toggle Button");
-#if OnePointOne
+#if TwoPointZero
             MelonPrefs.RegisterFloat("TigglePostProcessing", "NightMode1", 0, "Night Mode - 1");
             MelonPrefs.RegisterFloat("TigglePostProcessing", "NightMode2", 0, "Night Mode - 2");
             MelonPrefs.RegisterFloat("TogglePostProcessing", "NightModeCustomLevel", 0, "Night Mode - Custom: Darkness Level");
@@ -63,7 +63,7 @@ namespace TogglePostProcessing
                 GrabWorldVolumes();
                 GetPrefs();
                 ToggleMethod(ToggleHandler);
-                #if OnePointOne
+                #if TwoPointZero
                 NightMode.ApplyNightMode();
                 Bloom.ApplyBloom();
                 #endif
@@ -86,7 +86,7 @@ namespace TogglePostProcessing
                 TogglePostProcessingQM.setActive(QMToggle);
                 TogglePostProcessingQM.setToggleState(!ToggleHandler);
 #endif
-#if OnePointOne
+#if TwoPointZero
                 NightMode.ApplyNightMode(); 
                 Bloom.ApplyBloom();
 #endif
@@ -119,7 +119,7 @@ namespace TogglePostProcessing
                         GetPrefs();
                     }
                     ToggleMethod(ToggleHandler);
-                }), "Toggle Post Processing", null, null, null);
+                }), "Toggle Post Processing");
                 Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOff, 2.5f, 1.51f);
                 Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOn, 2.5f, 1.51f);
                 Arion.SetSizeButtonfor(TogglePostProcessingQM.getGameObject(), 1.9f, 1.38f);
@@ -140,7 +140,7 @@ namespace TogglePostProcessing
             {
                 ToggleHandler = MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing");
                 QMToggle = MelonPrefs.GetBool("TogglePostProcessing", "QMToggle");
-                #if OnePointOne
+                #if TwoPointZero
                 NightMode.NightMode1Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightMode1");
                 NightMode.NightMode2Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightMode2");
                 NightMode.NightMode3Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightModeCustom");
@@ -154,7 +154,9 @@ namespace TogglePostProcessing
                 #endif
             }
             catch (Exception e)
-            { MelonLogger.LogError("GetPrefs Error: " + e); }
+            { 
+                MelonLogger.LogError($"GetPrefs Error: {e}"); 
+            }
 
         }
         private static void GrabWorldVolumes() //Credits to Psychloor for Method
@@ -168,7 +170,9 @@ namespace TogglePostProcessing
                 }
             }
             catch (Exception e)
-            { MelonLogger.LogError("GrabWorldVolumes Error: " + e); }
+            {
+                MelonLogger.LogError($"GrabWorldVolumes Error: {e}"); 
+            }
 
         }
         private static void Reset() //Credits to Psychloor for Method
@@ -184,7 +188,9 @@ namespace TogglePostProcessing
                 }
             }
             catch (Exception e)
-            { MelonLogger.LogError("Reset Error: " + e); }
+            {
+                MelonLogger.LogError($"Reset Error: {e}"); 
+            }
         }
         private static void ToggleMethod(bool disable)
         {
@@ -209,7 +215,9 @@ namespace TogglePostProcessing
                 }
             }
             catch (Exception e)
-            { MelonLogger.LogError("ToggleMethod Error: " + e); }
+            { 
+                MelonLogger.LogError($"ToggleMethod Error: {e}");
+            }
         }
         private static void DisablePostProcessingBool(bool value)
         {

@@ -440,8 +440,6 @@ namespace RubyButtonAPI
         // Internal cache of the QuickMenu
         private static QuickMenu quickmenuInstance;
 
-        // Internal cache of the VRCUiManager
-        private static VRCUiManager vrcuimInstance;
 
 
 
@@ -489,15 +487,6 @@ namespace RubyButtonAPI
                 quickmenuInstance = QuickMenu.prop_QuickMenu_0;
             }
             return quickmenuInstance;
-        }
-        // Fetch the VRCUiManager instance
-        public static VRCUiManager GetVRCUiMInstance()
-        {
-            if (vrcuimInstance == null)
-            {
-                vrcuimInstance = VRCUiManager.field_Protected_Static_VRCUiManager_0;
-            }
-            return vrcuimInstance;
         }
 
         // Cache the FieldInfo for getting the current page. Hope to god this works!

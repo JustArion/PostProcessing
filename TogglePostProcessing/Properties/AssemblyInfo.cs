@@ -17,8 +17,8 @@ using BuildInfo = TogglePostProcessing.BuildInfo;
 
 [assembly: Guid("d3359f93-f373-4e70-9788-2e6b95f667ed")]
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion(BuildInfo.Version)]
+[assembly: AssemblyFileVersion(BuildInfo.Version)]
 
 [assembly: MelonInfo(typeof(TogglePostProcessing.TogglePostProcessing), BuildInfo.Name, BuildInfo.Version, BuildInfo.Author, BuildInfo.DownloadLink)]
 [assembly: MelonGame("VRChat", "VRChat")]
