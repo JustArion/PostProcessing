@@ -5,17 +5,17 @@ using Object = UnityEngine.Object;
 
 namespace TogglePostProcessing
 {
-    public class Bloom
+    internal class Bloom
     {
-        public static GameObject BloomObj = new GameObject();
+        private static GameObject BloomObj = new GameObject();
         private static EnumBloom BloomEnum;
 
-        public static bool Bloom1Bool;
-        public static bool Bloom2Bool;
-        public static bool Bloom3Bool;
-        public static bool Bloom4Bool;
-        public static float Bloom4Float;
-        public static void ApplyBloomEnum()
+        internal static bool Bloom1Bool;
+        internal static bool Bloom2Bool;
+        internal static bool Bloom3Bool;
+        internal static bool Bloom4Bool;
+        internal static float Bloom4Float;
+        internal static void ApplyBloomEnum()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace TogglePostProcessing
                 MelonLogger.LogError($"MelonMod Error: {e}");
             }
         }
-        public void ApplyBloom()
+        internal void ApplyBloom()
         {
             GameObject BloomObj = new GameObject();
             BloomObj.layer = 8; // Setting the layer to 8 is the PostProcessing layer.
@@ -60,7 +60,7 @@ namespace TogglePostProcessing
                     break;
             }
         }
-        public void UnTickAllExcept(bool Bloom)
+        internal void UnTickAllExcept(bool Bloom)
         {
             Bloom1Bool = false;
             Bloom2Bool = false;
@@ -68,7 +68,7 @@ namespace TogglePostProcessing
             Bloom4Bool = false;
             Bloom = true;
         }
-        public enum EnumBloom
+        internal enum EnumBloom
         {
             //Null,
             BloomLow,

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace TogglePostProcessing
 {
-    public static class BuildInfo
+    public sealed class BuildInfo
     {
         public const string Author = "arion#1223";
         public const string Company = null;
@@ -21,12 +21,12 @@ namespace TogglePostProcessing
         public const string Version = "1.1.0";
 
     }
-    public class TogglePostProcessing : MelonMod
+    public sealed class TogglePostProcessing : MelonMod
     {
         private static bool ToggleHandler;
         private static bool QMToggle;
         private static List<OriginalVolume> OriginalVolumes;
-        public struct OriginalVolume
+        private struct OriginalVolume
         {
             public PostProcessVolume postProcessVolume;
             public bool defaultState;
@@ -54,8 +54,8 @@ namespace TogglePostProcessing
             MelonLogger.Log("Settings can be configured in UserData/modprefs.ini or through UIExpansionKit");
             MelonLogger.Log("It is highly recommended that [UIExpansionKit] be used though.");
         }
-        public readonly NightMode NightMode = new NightMode();
-        public readonly Bloom Bloom = new Bloom();
+        internal readonly NightMode NightMode = new NightMode();
+        internal readonly Bloom Bloom = new Bloom();
         public override void OnLevelWasLoaded(int level)
         {
             try
@@ -98,7 +98,7 @@ namespace TogglePostProcessing
         }
         #if QM
         #region QuickMenu
-        public static QMToggleButton TogglePostProcessingQM;
+        internal static QMToggleButton TogglePostProcessingQM;
         public override void VRChat_OnUiManagerInit()
         {
             try
@@ -134,7 +134,7 @@ namespace TogglePostProcessing
         #endregion
         #endif
         #region Toggle
-        public void GetPrefs()
+        internal void GetPrefs()
         {
             try
             {

@@ -10,10 +10,10 @@ using Object = UnityEngine.Object;
 
 namespace TogglePostProcessing
 {
-    public class NightMode
+    internal class NightMode
     {
         //1 Night Mode Object is possible but some people might want to stack their Night Modes to be really dark.
-        public static GameObject PostProcessing = new GameObject();
+        internal static GameObject PostProcessing = new GameObject();
 
 
         public static bool NightMode1Bool;
@@ -21,7 +21,7 @@ namespace TogglePostProcessing
         public static bool NightMode3Bool;
         public static float NightMode3Float;
 
-        public void ApplyNightMode()
+        internal void ApplyNightMode()
         {
             GameObject PostProcessing = new GameObject();
             PostProcessing.layer = 8; // Setting the layer to 8 is the PostProcessing layer.
