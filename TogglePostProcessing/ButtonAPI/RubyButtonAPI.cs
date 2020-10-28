@@ -190,24 +190,23 @@ namespace RubyButtonAPI
         public GameObject btnOff;
         public List<QMButtonBase> showWhenOn = new List<QMButtonBase>();
         public List<QMButtonBase> hideWhenOn = new List<QMButtonBase>();
-        public bool shouldSaveInConfig = false;
 
         Action btnOnAction = null;
         Action btnOffAction = null;
 
-        public QMToggleButton(QMNestedButton btnMenu, float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool shouldSaveInConfig = false, bool defaultPosition = false)
+        public QMToggleButton(QMNestedButton btnMenu, float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
         {
             btnQMLoc = btnMenu.getMenuName();
-            initButton(btnXLocation, btnYLocation, btnTextOn, btnActionOn, btnTextOff, btnActionOff, btnToolTip, btnBackgroundColor, btnTextColorOn, btnTextColorOff, shouldSaveInConfig, defaultPosition);
+            initButton(btnXLocation, btnYLocation, btnTextOn, btnActionOn, btnTextOff, btnActionOff, btnToolTip, btnBackgroundColor, btnTextColorOn, btnTextColorOff, defaultPosition);
         }
 
-        public QMToggleButton(string btnMenu, float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool shouldSaveInConfig = false, bool defaultPosition = false)
+        public QMToggleButton(string btnMenu, float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
         {
             btnQMLoc = btnMenu;
-            initButton(btnXLocation, btnYLocation, btnTextOn, btnActionOn, btnTextOff, btnActionOff, btnToolTip, btnBackgroundColor, btnTextColorOn, btnTextColorOff, shouldSaveInConfig, defaultPosition);
+            initButton(btnXLocation, btnYLocation, btnTextOn, btnActionOn, btnTextOff, btnActionOff, btnToolTip, btnBackgroundColor, btnTextColorOn, btnTextColorOff, defaultPosition);
         }
 
-        private void initButton(float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool shouldSaveInConf = false, bool defaultPosition = false)
+        private void initButton(float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
         {
             btnType = "ToggleButton";
             button = UnityEngine.Object.Instantiate<GameObject>(QuickMenuStuff.ToggleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance().transform.Find(btnQMLoc), true);
