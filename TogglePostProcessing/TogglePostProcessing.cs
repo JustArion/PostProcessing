@@ -3,22 +3,20 @@ using MelonLoader;
 using UnityEngine.Rendering.PostProcessing;
 using System.Collections.Generic;
 using RubyButtonAPI;
-using System.Diagnostics;
-using UIExpansionKit.API; // If using this mark as optional melon dependency
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace TogglePostProcessing
 {
-    public sealed class BuildInfo
+    internal sealed class BuildInfo
     {
-        public const string Author = "arion#1223";
-        public const string Company = null;
-        public const string DownloadLink = "https://github.com/Arion-Kun/TogglePostProcessing/releases/";
+        internal const string Author = "arion#1223";
+        internal const string Company = null;
+        internal const string DownloadLink = "https://github.com/Arion-Kun/TogglePostProcessing/releases/";
 
-        public const string Name = "TogglePostProcessing";
+        internal const string Name = "TogglePostProcessing";
 
-        public const string Version = "1.1.0";
+        internal const string Version = "1.1.1";
 
     }
     public sealed class TogglePostProcessing : MelonMod
@@ -52,7 +50,6 @@ namespace TogglePostProcessing
             GetPrefs();
 
             MelonLogger.Log("Settings can be configured in UserData/modprefs.ini or through UIExpansionKit");
-            MelonLogger.Log("It is highly recommended that [UIExpansionKit] be used though.");
         }
         internal readonly NightMode NightMode = new NightMode();
         internal readonly Bloom Bloom = new Bloom();
@@ -134,7 +131,7 @@ namespace TogglePostProcessing
         #endregion
         #endif
         #region Toggle
-        internal void GetPrefs()
+        internal static void GetPrefs()
         {
             try
             {
@@ -179,12 +176,9 @@ namespace TogglePostProcessing
         {
             try
             {
-                foreach (OriginalVolume originalVolume in OriginalVolumes)
+                foreach (var originalVolume in OriginalVolumes.Where(originalVolume => originalVolume.postProcessVolume))
                 {
-                    if (originalVolume.postProcessVolume)
-                    {
-                        originalVolume.postProcessVolume.enabled = originalVolume.defaultState;
-                    }
+                    originalVolume.postProcessVolume.enabled = originalVolume.defaultState;
                 }
             }
             catch (Exception e)
@@ -198,15 +192,10 @@ namespace TogglePostProcessing
             {
                 if (disable)
                 {
-                    if (OriginalVolumes != null)
+                    if (OriginalVolumes == null) return;
+                    foreach (var originalVolume in OriginalVolumes.Where(originalVolume => originalVolume.postProcessVolume))
                     {
-                        foreach (OriginalVolume originalVolume in OriginalVolumes)
-                        {
-                            if (originalVolume.postProcessVolume)
-                            {
-                                originalVolume.postProcessVolume.enabled = false;
-                            }
-                        }
+                        originalVolume.postProcessVolume.enabled = false;
                     }
                 }
                 else
