@@ -2,6 +2,7 @@
 using Il2CppSystem.Reflection;
 using System.Collections.Generic;
 using System.Linq;
+using TogglePostProcessing.DawnRefs;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -37,7 +38,7 @@ namespace RubyButtonAPI
         protected string btnQMLoc;
         protected string btnType;
         protected string btnTag;
-        protected int[] initShift = { 0, 0 };
+        protected readonly int[] initShift = { 0, 0 };
         protected Color OrigBackground;
         protected Color OrigText;
 
@@ -108,22 +109,22 @@ namespace RubyButtonAPI
 
     public class QMSingleButton : QMButtonBase
     {
-        public QMSingleButton(QMNestedButton btnMenu, int btnXLocation, int btnYLocation, String btnText, Action btnAction, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null)
+        public QMSingleButton(QMNestedButton btnMenu, int btnXLocation, int btnYLocation, string btnText, Action btnAction, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null)
         {
             btnQMLoc = btnMenu.getMenuName();
             initButton(btnXLocation, btnYLocation, btnText, btnAction, btnToolTip, btnBackgroundColor, btnTextColor);
         }
 
-        public QMSingleButton(string btnMenu, int btnXLocation, int btnYLocation, String btnText, Action btnAction, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null)
+        public QMSingleButton(string btnMenu, int btnXLocation, int btnYLocation, string btnText, Action btnAction, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null)
         {
             btnQMLoc = btnMenu;
             initButton(btnXLocation, btnYLocation, btnText, btnAction, btnToolTip, btnBackgroundColor, btnTextColor);
         }
 
-        private void initButton(int btnXLocation, int btnYLocation, String btnText, Action btnAction, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null)
+        private void initButton(int btnXLocation, int btnYLocation, string btnText, Action btnAction, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null)
         {
             btnType = "SingleButton";
-            button = UnityEngine.Object.Instantiate(QuickMenuStuff.SingleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance().transform.Find(btnQMLoc), true);
+            button = UnityEngine.Object.Instantiate(QuickMenuStuff.SingleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance()().transform.Find(btnQMLoc), true);
 
             initShift[0] = -1;
             initShift[1] = 0;
@@ -188,28 +189,28 @@ namespace RubyButtonAPI
     {
         public GameObject btnOn;
         public GameObject btnOff;
-        public List<QMButtonBase> showWhenOn = new List<QMButtonBase>();
-        public List<QMButtonBase> hideWhenOn = new List<QMButtonBase>();
+        private readonly List<QMButtonBase> showWhenOn = new List<QMButtonBase>();
+        private readonly List<QMButtonBase> hideWhenOn = new List<QMButtonBase>();
 
         Action btnOnAction = null;
         Action btnOffAction = null;
 
-        public QMToggleButton(QMNestedButton btnMenu, float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
+        public QMToggleButton(QMNestedButton btnMenu, float btnXLocation, float btnYLocation, string btnTextOn, Action btnActionOn, string btnTextOff, Action btnActionOff, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
         {
             btnQMLoc = btnMenu.getMenuName();
             initButton(btnXLocation, btnYLocation, btnTextOn, btnActionOn, btnTextOff, btnActionOff, btnToolTip, btnBackgroundColor, btnTextColorOn, btnTextColorOff, defaultPosition);
         }
 
-        public QMToggleButton(string btnMenu, float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
+        public QMToggleButton(string btnMenu, float btnXLocation, float btnYLocation, string btnTextOn, Action btnActionOn, string btnTextOff, Action btnActionOff, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
         {
             btnQMLoc = btnMenu;
             initButton(btnXLocation, btnYLocation, btnTextOn, btnActionOn, btnTextOff, btnActionOff, btnToolTip, btnBackgroundColor, btnTextColorOn, btnTextColorOff, defaultPosition);
         }
 
-        private void initButton(float btnXLocation, float btnYLocation, String btnTextOn, Action btnActionOn, String btnTextOff, Action btnActionOff, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
+        private void initButton(float btnXLocation, float btnYLocation, string btnTextOn, Action btnActionOn, string btnTextOff, Action btnActionOff, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
         {
             btnType = "ToggleButton";
-            button = UnityEngine.Object.Instantiate<GameObject>(QuickMenuStuff.ToggleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance().transform.Find(btnQMLoc), true);
+            button = UnityEngine.Object.Instantiate<GameObject>(QuickMenuStuff.ToggleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance()().transform.Find(btnQMLoc), true);
 
             btnOn = button.transform.Find("Toggle_States_Visible/ON").gameObject;
             btnOff = button.transform.Find("Toggle_States_Visible/OFF").gameObject;
@@ -365,46 +366,43 @@ namespace RubyButtonAPI
         protected QMSingleButton mainButton;
         protected QMSingleButton backButton;
         protected string menuName;
-        protected string btnQMLoc;
+        protected readonly string btnQMLoc;
         protected string btnType;
 
-        public QMNestedButton(QMNestedButton btnMenu, int btnXLocation, int btnYLocation, String btnText, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null, Color? backbtnBackgroundColor = null, Color? backbtnTextColor = null)
+        public QMNestedButton(QMNestedButton btnMenu, int btnXLocation, int btnYLocation, string btnText, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null, Color? backbtnBackgroundColor = null, Color? backbtnTextColor = null)
         {
             btnQMLoc = btnMenu.getMenuName();
             initButton(btnXLocation, btnYLocation, btnText, btnToolTip, btnBackgroundColor, btnTextColor, backbtnBackgroundColor, backbtnTextColor);
         }
 
-        public QMNestedButton(string btnMenu, int btnXLocation, int btnYLocation, String btnText, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null, Color? backbtnBackgroundColor = null, Color? backbtnTextColor = null)
+        public QMNestedButton(string btnMenu, int btnXLocation, int btnYLocation, string btnText, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null, Color? backbtnBackgroundColor = null, Color? backbtnTextColor = null)
         {
             btnQMLoc = btnMenu;
             initButton(btnXLocation, btnYLocation, btnText, btnToolTip, btnBackgroundColor, btnTextColor, backbtnBackgroundColor, backbtnTextColor);
         }
 
-        public void initButton(int btnXLocation, int btnYLocation, String btnText, String btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null, Color? backbtnBackgroundColor = null, Color? backbtnTextColor = null)
+        public void initButton(int btnXLocation, int btnYLocation, string btnText, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null, Color? backbtnBackgroundColor = null, Color? backbtnTextColor = null)
         {
             btnType = "NestedButton";
 
-            Transform menu = UnityEngine.Object.Instantiate<Transform>(QuickMenuStuff.NestedMenuTemplate(), QuickMenuStuff.GetQuickMenuInstance().transform);
+            var menu = UnityEngine.Object.Instantiate<Transform>(QuickMenuStuff.NestedMenuTemplate(), QuickMenuStuff.GetQuickMenuInstance()().transform);
             menuName = QMButtonAPI.identifier + btnQMLoc + "_" + btnXLocation + "_" + btnYLocation;
             menu.name = menuName;
 
             mainButton = new QMSingleButton(btnQMLoc, btnXLocation, btnYLocation, btnText, () => { QuickMenuStuff.ShowQuickmenuPage(menuName); }, btnToolTip, btnBackgroundColor, btnTextColor);
 
-            Il2CppSystem.Collections.IEnumerator enumerator = menu.transform.GetEnumerator();
+            var enumerator = menu.transform.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                Il2CppSystem.Object obj = enumerator.Current;
-                Transform btnEnum = obj.Cast<Transform>();
+                var obj = enumerator.Current;
+                var btnEnum = obj.Cast<Transform>();
                 if (btnEnum != null)
                 {
                     UnityEngine.Object.Destroy(btnEnum.gameObject);
                 }
             }
 
-            if (backbtnTextColor == null)
-            {
-                backbtnTextColor = Color.yellow;
-            }
+            backbtnTextColor ??= Color.yellow;
             QMButtonAPI.allNestedButtons.Add(this);
             backButton = new QMSingleButton(this, 5, 2, "Back", () => { QuickMenuStuff.ShowQuickmenuPage(btnQMLoc); }, "Go Back", backbtnBackgroundColor, backbtnTextColor);
         }
@@ -445,7 +443,7 @@ namespace RubyButtonAPI
         private static Transform NestedButtonReference;
 
         // Internal cache of the QuickMenu
-        private static QuickMenu quickmenuInstance;
+        private static Refs.QuickMenuDelegate quickmenuInstance;
 
 
 
@@ -454,7 +452,7 @@ namespace RubyButtonAPI
         public static BoxCollider QuickMenuBackground()
         {
             if (QuickMenuBackgroundReference == null)
-                QuickMenuBackgroundReference = GetQuickMenuInstance().GetComponent<BoxCollider>();
+                QuickMenuBackgroundReference = GetQuickMenuInstance()().GetComponent<BoxCollider>();
             return QuickMenuBackgroundReference;
         }
 
@@ -462,7 +460,7 @@ namespace RubyButtonAPI
         public static GameObject SingleButtonTemplate()
         {
             if (SingleButtonReference == null)
-                SingleButtonReference = GetQuickMenuInstance().transform.Find("ShortcutMenu/WorldsButton").gameObject;
+                SingleButtonReference = GetQuickMenuInstance()().transform.Find("ShortcutMenu/WorldsButton").gameObject;
             return SingleButtonReference;
         }
 
@@ -471,7 +469,7 @@ namespace RubyButtonAPI
         {
             if (ToggleButtonReference == null)
             {
-                ToggleButtonReference = GetQuickMenuInstance().transform.Find("UserInteractMenu/BlockButton").gameObject;
+                ToggleButtonReference = GetQuickMenuInstance()().transform.Find("UserInteractMenu/BlockButton").gameObject;
             }
             return ToggleButtonReference;
         }
@@ -481,19 +479,15 @@ namespace RubyButtonAPI
         {
             if (NestedButtonReference == null)
             {
-                NestedButtonReference = GetQuickMenuInstance().transform.Find("CameraMenu");
+                NestedButtonReference = GetQuickMenuInstance()().transform.Find("CameraMenu");
             }
             return NestedButtonReference;
         }
 
         // Fetch the Quick Menu instance
-        public static QuickMenu GetQuickMenuInstance()
+        public static Refs.QuickMenuDelegate GetQuickMenuInstance()
         {
-            if (quickmenuInstance == null)
-            {
-                quickmenuInstance = QuickMenu.prop_QuickMenu_0;
-            }
-            return quickmenuInstance;
+            return quickmenuInstance ??= Refs.QuickMenu;
         }
 
         // Cache the FieldInfo for getting the current page. Hope to god this works!
@@ -502,8 +496,8 @@ namespace RubyButtonAPI
         // Show a Quick Menu page via the Page Name. Hope to god this works!
         public static void ShowQuickmenuPage(string pagename)
         {
-            QuickMenu quickmenu = GetQuickMenuInstance();
-            Transform pageTransform = quickmenu?.transform.Find(pagename);
+            var quickmenu = GetQuickMenuInstance();
+            var pageTransform = quickmenu().transform.Find(pagename);
             if (pageTransform == null)
             {
                 Console.WriteLine("[QMStuff] pageTransform is null !");
@@ -511,23 +505,21 @@ namespace RubyButtonAPI
 
             if (currentPageGetter == null)
             {
-                GameObject shortcutMenu = quickmenu.transform.Find("ShortcutMenu").gameObject;
-                if (!shortcutMenu.activeInHierarchy)
-                    shortcutMenu = quickmenu.transform.Find("UserInteractMenu").gameObject;
+                var shortcutMenu = quickmenu?.Invoke().transform.Find("ShortcutMenu").gameObject;
+                if (shortcutMenu != null && !shortcutMenu.activeInHierarchy)
+                    shortcutMenu = quickmenu().transform.Find("UserInteractMenu").gameObject;
 
                 
-                FieldInfo[] fis = Il2CppType.Of<QuickMenu>().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == Il2CppType.Of<GameObject>()).ToArray();
+                var fis = Il2CppType.Of<QuickMenu>().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == Il2CppType.Of<GameObject>()).ToArray();
                 //MelonLoader.MelonLogger.Log("[QMStuff] GameObject Fields in QuickMenu:");
                 int count = 0;
-                foreach (FieldInfo fi in fis)
+                foreach (var fi in fis)
                 {
-                    GameObject value = fi.GetValue(quickmenu)?.TryCast<GameObject>();
-                    if (value == shortcutMenu && ++count == 2)
-                    {
-                        //MelonLoader.MelonLogger.Log("[QMStuff] currentPage field: " + fi.Name);
-                        currentPageGetter = fi;
-                        break;
-                    }
+                    var value = fi.GetValue(quickmenu?.Invoke())?.TryCast<GameObject>();
+                    if (value != shortcutMenu || ++count != 2) continue;
+                    //MelonLoader.MelonLogger.Log("[QMStuff] currentPage field: " + fi.Name);
+                    currentPageGetter = fi;
+                    break;
                 }
                 if (currentPageGetter == null)
                 {
@@ -536,36 +528,36 @@ namespace RubyButtonAPI
                 }
             }
 
-            currentPageGetter.GetValue(quickmenu)?.Cast<GameObject>().SetActive(false);
+            currentPageGetter.GetValue(quickmenu?.Invoke())?.Cast<GameObject>().SetActive(false);
 
-            GameObject infoBar = GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar").gameObject;
+            var infoBar = GetQuickMenuInstance()().transform.Find("QuickMenu_NewElements/_InfoBar").gameObject;
             infoBar.SetActive(pagename == "ShortcutMenu");
 
-            QuickMenuContextualDisplay quickmenuContextualDisplay = GetQuickMenuInstance().field_Private_QuickMenuContextualDisplay_0;
+            QuickMenuContextualDisplay quickmenuContextualDisplay = GetQuickMenuInstance()().field_Private_QuickMenuContextualDisplay_0;
             quickmenuContextualDisplay.Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.NoSelection);
             //quickmenuContextualDisplay.Method_Public_Nested0_0(QuickMenuContextualDisplay.Nested0.NoSelection);
 
             pageTransform.gameObject.SetActive(true);
 
-            currentPageGetter.SetValue(quickmenu, pageTransform.gameObject);
-            if (pagename == "ShortcutMenu")
+            currentPageGetter.SetValue(quickmenu?.Invoke(), pageTransform.gameObject);
+            switch (pagename)
             {
-                SetIndex(0);
-            }
-            else if (pagename == "UserInteractMenu")
-            {
-                SetIndex(3);
-            }
-            else
-            {
-                SetIndex(-1);
+                case "ShortcutMenu":
+                    SetIndex(0);
+                    break;
+                case "UserInteractMenu":
+                    SetIndex(3);
+                    break;
+                default:
+                    SetIndex(-1);
+                    break;
             }
         }
 
         // Set the current Quick Menu index
         public static void SetIndex(int index)
         {
-            GetQuickMenuInstance().field_Private_Int32_0 = index;
+            GetQuickMenuInstance()().field_Private_Int32_0 = index;
         }
     }
 }

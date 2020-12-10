@@ -3,10 +3,11 @@ using System.Linq;
 
 namespace TogglePostProcessing.DawnRefs
 {
-    internal static class Refs
+    public static class Refs
     {
         private static QuickMenuDelegate QuickMenuInstance;
-        internal delegate QuickMenu QuickMenuDelegate();
+
+        public delegate QuickMenu QuickMenuDelegate();
 
         internal static QuickMenuDelegate QuickMenu
         {
