@@ -79,8 +79,8 @@ namespace RubyButtonAPI
 
         public void setToolTip(string buttonToolTip)
         {
-            button.GetComponent<UiTooltip>().text = buttonToolTip;
-            button.GetComponent<UiTooltip>().alternateText = buttonToolTip;
+            button.GetComponent<UiTooltip>().field_Public_String_0 = buttonToolTip;
+            button.GetComponent<UiTooltip>().field_Public_String_1 = buttonToolTip;
         }
 
         public void DestroyMe()
@@ -214,17 +214,10 @@ namespace RubyButtonAPI
 
             btnOn = button.transform.Find("Toggle_States_Visible/ON").gameObject;
             btnOff = button.transform.Find("Toggle_States_Visible/OFF").gameObject;
-
-            if (Resources.FindObjectsOfTypeAll<VRCApplicationSetup>().First().buildNumber < 1028) // Thanks and Credits to Emilia for this snippet
-            {
-                initShift[0] = -4;
-                initShift[1] = 0;
-            } else
-            {
-                initShift[0] = -3;
-                initShift[1] = -1;
-            }
             
+            initShift[0] = -4;
+            initShift[1] = 0;
+
             setLocation(btnXLocation, btnYLocation);
 
             setOnText(btnTextOn);
