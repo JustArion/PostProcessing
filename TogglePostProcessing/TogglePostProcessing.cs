@@ -4,6 +4,7 @@ using UnityEngine.Rendering.PostProcessing;
 using System.Collections.Generic;
 using RubyButtonAPI;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,7 @@ namespace TogglePostProcessing
 
         internal const string Name = "TogglePostProcessing";
 
-        internal const string Version = "1.1.2";
+        internal const string Version = "1.1.3";
 
     }
     public sealed class TogglePostProcessing : MelonMod
@@ -97,11 +98,13 @@ namespace TogglePostProcessing
         #if QM
         #region QuickMenu
         internal static QMToggleButton TogglePostProcessingQM;
+        private const float QMX = 2.7f;
+        private const float QMY = 1.8f;
         public override void VRChat_OnUiManagerInit()
         {
             try
             {
-                TogglePostProcessingQM = new QMToggleButton("ShortcutMenu", 0.77f, 1.13f, "TPP", () =>
+                TogglePostProcessingQM = new QMToggleButton("ShortcutMenu", 1.23f, 0.3f, "TPP", () =>
                 {
                     DisablePostProcessingBool(false);
                     if (ToggleHandler != MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"))
@@ -109,7 +112,7 @@ namespace TogglePostProcessing
                         GetPrefs();
                     }
                     ToggleMethod(ToggleHandler);
-                }, "OFF", new Action(() =>
+                }, "OFF", () =>
                 {
                     DisablePostProcessingBool(true);
                     if (ToggleHandler != MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"))
@@ -117,9 +120,9 @@ namespace TogglePostProcessing
                         GetPrefs();
                     }
                     ToggleMethod(ToggleHandler);
-                }), "Toggle Post Processing");
-                Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOff, 2.5f, 1.8f);
-                Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOn, 2.5f, 1.8f);
+                }, "Toggle Post Processing");
+                Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOff, QMX, QMY);
+                Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOn, QMX, QMY);
                 Arion.SetSizeButtonfor(TogglePostProcessingQM.getGameObject(), 1.9f, 1.8f);
                 TogglePostProcessingQM.getGameObject().GetComponent<Image>().enabled = false;
                 TogglePostProcessingQM.setToggleState(!MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"));
