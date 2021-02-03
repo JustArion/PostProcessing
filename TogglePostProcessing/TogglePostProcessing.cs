@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using VRCSDK2;
+using static MelonLoader.MelonLogger;
 
 namespace TogglePostProcessing
 {
@@ -18,7 +20,7 @@ namespace TogglePostProcessing
 
         internal const string Name = "TogglePostProcessing";
 
-        internal const string Version = "1.1.3";
+        internal const string Version = "1.1.4";
 
     }
     public sealed class TogglePostProcessing : MelonMod
@@ -104,7 +106,7 @@ namespace TogglePostProcessing
         {
             try
             {
-                TogglePostProcessingQM = new QMToggleButton("ShortcutMenu", 1.23f, 0.3f, "TPP", () =>
+                TogglePostProcessingQM = new QMToggleButton("ShortcutMenu", 1.24f, 1.75f, "TPP", () =>
                 {
                     DisablePostProcessingBool(false);
                     if (ToggleHandler != MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"))
@@ -125,6 +127,9 @@ namespace TogglePostProcessing
                 Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOn, QMX, QMY);
                 Arion.SetSizeButtonfor(TogglePostProcessingQM.getGameObject(), 1.9f, 1.8f);
                 TogglePostProcessingQM.getGameObject().GetComponent<Image>().enabled = false;
+                var boxCollider = TogglePostProcessingQM.getGameObject().AddComponent<BoxCollider>();
+                TogglePostProcessingQM.getGameObject().AddComponent<VRC_UiShape>();
+                TogglePostProcessingQM.getGameObject().AddComponent<GraphicRaycaster>();
                 TogglePostProcessingQM.setToggleState(!MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"));
                 TogglePostProcessingQM.setActive(QMToggle);
                 TogglePostProcessingQM.getGameObject().name = "TPP Toggle";
