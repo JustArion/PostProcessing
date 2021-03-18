@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using System.Threading.Tasks;
 using Object = UnityEngine.Object;
+#if TwoPointZero
 
 namespace TogglePostProcessing
 {
@@ -28,3 +29,4 @@ namespace TogglePostProcessing
         }
     }
 }
+#endif

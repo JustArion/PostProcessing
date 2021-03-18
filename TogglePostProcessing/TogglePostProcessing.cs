@@ -4,7 +4,9 @@ using UnityEngine.Rendering.PostProcessing;
 using System.Collections.Generic;
 using RubyButtonAPI;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using TogglePostProcessing.DawnRefs;
 using UnityEngine;
 using UnityEngine.UI;
 using VRCSDK2;
@@ -20,13 +22,14 @@ namespace TogglePostProcessing
 
         internal const string Name = "TogglePostProcessing";
 
-        internal const string Version = "1.1.4";
+        internal const string Version = "1.1.5";
 
     }
     public sealed class TogglePostProcessing : MelonMod
     {
         private static bool ToggleHandler;
         private static bool QMToggle;
+        private static bool UIManagerStarted;
         private static List<OriginalVolume> OriginalVolumes;
         private struct OriginalVolume
         {
@@ -35,10 +38,11 @@ namespace TogglePostProcessing
         }
         public override void OnApplicationStart()
         {
-            MelonPrefs.RegisterCategory("TogglePostProcessing", "Toggle Post Processing");
-            MelonPrefs.RegisterBool("TogglePostProcessing", "DisablePostProcessing", false, "Disable Post Processing");
+            MelonPreferences.CreateCategory("TogglePostProcessing", "Toggle Post Processing");
+            MelonPreferences.CreateEntry("TogglePostProcessing", "DisablePostProcessing", false, "Disable Post Processing");
             //QM Stuff
-            MelonPrefs.RegisterBool("TogglePostProcessing", "QMToggle", true, "QuickMenu Toggle Button");
+            MelonPreferences.CreateEntry("TogglePostProcessing", "QMToggle", true, "QuickMenu Toggle Button");
+            #region 2.0
 #if TwoPointZero
             MelonPrefs.RegisterFloat("TigglePostProcessing", "NightMode1", 0, "Night Mode - 1");
             MelonPrefs.RegisterFloat("TigglePostProcessing", "NightMode2", 0, "Night Mode - 2");
@@ -51,41 +55,52 @@ namespace TogglePostProcessing
             MelonPrefs.RegisterBool("TogglePostProcessing", "BloomCustom", false, "Bloom - Custom");
             MelonPrefs.RegisterFloat("TogglePostProcessing", "BloomCustomLevel", 0, "Bloom - Custom: Bloom Level");
 #endif
+            #endregion
             GetPrefs();
 
-            MelonLogger.Log("Settings can be configured in UserData/modprefs.ini or through UIExpansionKit");
+            Msg("Settings can be configured in UserData/modprefs.ini or through UIExpansionKit");
         }
+#if TwoPointZero
+
         internal readonly NightMode NightMode = new NightMode();
         internal readonly Bloom Bloom = new Bloom();
-        public override void OnLevelWasLoaded(int level)
+#endif
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
-            try
+            switch (buildIndex)
             {
-                GrabWorldVolumes();
-                GetPrefs();
-                ToggleMethod(ToggleHandler);
-                #if TwoPointZero
-                NightMode.ApplyNightMode();
-                Bloom.ApplyBloom();
-                #endif
-            }
-            catch (Exception e)
-            {
-                MelonLogger.LogError($"MelonMod Error: {e}");
+                case 0:
+                case 1:
+                break;
+                default:
+                    try
+                    {
+                        GrabWorldVolumes();
+                        GetPrefs();
+                        ToggleMethod(ToggleHandler);
+                    #if TwoPointZero
+                        NightMode.ApplyNightMode();
+                        Bloom.ApplyBloom();
+                    #endif
+                    }
+                    catch (Exception e)
+                    {
+                        Error($"MelonMod Error: {e}");
+                    }
+                    break;
             }
         }
-        public override void OnModSettingsApplied()
+
+        public override void OnPreferencesSaved()
         {
+            if (!UIManagerStarted) return;
             try
             {
-                if (ToggleHandler != MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing") || QMToggle != MelonPrefs.GetBool("TogglePostProcessing", "QMToggle"))
-                {
-                    GetPrefs();
-                }
-                ToggleMethod(MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"));
-                #if QM
-                TogglePostProcessingQM.setActive(QMToggle);
-                TogglePostProcessingQM.setToggleState(!ToggleHandler);
+                GetPrefs();
+                ToggleMethod(ToggleHandler);
+#if QM
+                TPPQM.setActive(QMToggle);
+                TPPQM.setToggleState(!ToggleHandler);
 #endif
 #if TwoPointZero
                 NightMode.ApplyNightMode(); 
@@ -94,49 +109,44 @@ namespace TogglePostProcessing
             }
             catch (Exception e)
             {
-                MelonLogger.LogError($"MelonMod Error: {e}");
+                Error($"MelonMod Error: {e}");
             }
         }
-        #if QM
+#if QM
         #region QuickMenu
-        internal static QMToggleButton TogglePostProcessingQM;
+        private static QMToggleButton TPPQM;
         private const float QMX = 2.7f;
         private const float QMY = 1.8f;
         public override void VRChat_OnUiManagerInit()
         {
+            UIManagerStarted = true;
             try
             {
-                TogglePostProcessingQM = new QMToggleButton("ShortcutMenu", 1.24f, 1.75f, "TPP", () =>
+                TPPQM = new QMToggleButton("ShortcutMenu", 1.24f, 1.75f, "TPP", () =>
                 {
-                    DisablePostProcessingBool(false);
-                    if (ToggleHandler != MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"))
-                    {
-                        GetPrefs();
-                    }
+                    MelonPreferences.SetEntryValue("TogglePostProcessing", "DisablePostProcessing", false);
+                    ToggleHandler = false;
                     ToggleMethod(ToggleHandler);
                 }, "OFF", () =>
                 {
-                    DisablePostProcessingBool(true);
-                    if (ToggleHandler != MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"))
-                    {
-                        GetPrefs();
-                    }
+                    MelonPreferences.SetEntryValue("TogglePostProcessing", "DisablePostProcessing", true);
+                    ToggleHandler = true;
                     ToggleMethod(ToggleHandler);
                 }, "Toggle Post Processing");
-                Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOff, QMX, QMY);
-                Arion.SetSizeButtonfor(TogglePostProcessingQM.btnOn, QMX, QMY);
-                Arion.SetSizeButtonfor(TogglePostProcessingQM.getGameObject(), 1.9f, 1.8f);
-                TogglePostProcessingQM.getGameObject().GetComponent<Image>().enabled = false;
-                var boxCollider = TogglePostProcessingQM.getGameObject().AddComponent<BoxCollider>();
-                TogglePostProcessingQM.getGameObject().AddComponent<VRC_UiShape>();
-                TogglePostProcessingQM.getGameObject().AddComponent<GraphicRaycaster>();
-                TogglePostProcessingQM.setToggleState(!MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing"));
-                TogglePostProcessingQM.setActive(QMToggle);
-                TogglePostProcessingQM.getGameObject().name = "TPP Toggle";
+                TPPQM.btnOff.SetSizeButtonfor(QMX, QMY);
+                TPPQM.btnOn.SetSizeButtonfor(QMX, QMY);
+                TPPQM.getGameObject().SetSizeButtonfor(1.9f, 1.8f);
+                TPPQM.getGameObject().GetComponent<Image>().enabled = false;
+                TPPQM.getGameObject().AddComponent<BoxCollider>();
+                TPPQM.getGameObject().AddComponent<VRC_UiShape>();
+                TPPQM.getGameObject().AddComponent<GraphicRaycaster>();
+                TPPQM.setToggleState(!ToggleHandler);
+                TPPQM.setActive(QMToggle);
+                TPPQM.getGameObject().name = "TPP Toggle";
             }
             catch (Exception e)
             {
-                MelonLogger.LogError($"MelonMod Error: {e}");
+                Error($"MelonMod Error: {e}");
             }
         }
         #endregion
@@ -146,9 +156,11 @@ namespace TogglePostProcessing
         {
             try
             {
-                ToggleHandler = MelonPrefs.GetBool("TogglePostProcessing", "DisablePostProcessing");
-                QMToggle = MelonPrefs.GetBool("TogglePostProcessing", "QMToggle");
-                #if TwoPointZero
+                ToggleHandler = MelonPreferences.GetEntryValue<bool>("TogglePostProcessing", "DisablePostProcessing");
+                QMToggle = MelonPreferences.GetEntryValue<bool>("TogglePostProcessing", "QMToggle");
+
+                #region 2.0
+#if TwoPointZero
                 NightMode.NightMode1Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightMode1");
                 NightMode.NightMode2Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightMode2");
                 NightMode.NightMode3Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightModeCustom");
@@ -159,11 +171,12 @@ namespace TogglePostProcessing
                 Bloom.Bloom3Bool = MelonPrefs.GetBool("TogglePostProcessing", "BloomHigh");
                 Bloom.Bloom4Bool = MelonPrefs.GetBool("TogglePostProcessing", "BloomCustom");
                 Bloom.Bloom4Float = MelonPrefs.GetFloat("TogglePostProcessing", "BloomCustomLevel");
-                #endif
+#endif
+                #endregion
             }
             catch (Exception e)
             { 
-                MelonLogger.LogError($"GetPrefs Error: {e}"); 
+                Error($"GetPrefs Error: {e}"); 
             }
 
         }
@@ -179,7 +192,7 @@ namespace TogglePostProcessing
             }
             catch (Exception e)
             {
-                MelonLogger.LogError($"GrabWorldVolumes Error: {e}"); 
+                Error($"GrabWorldVolumes Error: {e}"); 
             }
 
         }
@@ -194,11 +207,12 @@ namespace TogglePostProcessing
             }
             catch (Exception e)
             {
-                MelonLogger.LogError($"Reset Error: {e}"); 
+                Error($"Reset Error: {e}"); 
             }
         }
         private static void ToggleMethod(bool disable)
         {
+            if (Refs.CurrentUser == null) return;
             try
             {
                 if (disable)
@@ -216,13 +230,9 @@ namespace TogglePostProcessing
             }
             catch (Exception e)
             { 
-                MelonLogger.LogError($"ToggleMethod Error: {e}");
+                Error($"ToggleMethod Error: {e}");
             }
         }
-        private static void DisablePostProcessingBool(bool value)
-        {
-            MelonPrefs.SetBool("TogglePostProcessing", "DisablePostProcessing", value);
-        }
-#endregion
+        #endregion
     }
 }

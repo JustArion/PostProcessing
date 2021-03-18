@@ -23,10 +23,10 @@ namespace RubyButtonAPI
         public static List<QMToggleButton> allToggleButtons = new List<QMToggleButton>();
         public static List<QMNestedButton> allNestedButtons = new List<QMNestedButton>();
     }
-    public static class Arion
+    public static class QM
     {
         //Added by Arion
-        public static void SetSizeButtonfor(GameObject Button, float xSize, float ySize)
+        public static void SetSizeButtonfor(this GameObject Button, float xSize, float ySize)
         {
             Button.GetComponent<RectTransform>().sizeDelta /= new Vector2(xSize, ySize);
         }
@@ -124,7 +124,7 @@ namespace RubyButtonAPI
         private void initButton(int btnXLocation, int btnYLocation, string btnText, Action btnAction, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColor = null)
         {
             btnType = "SingleButton";
-            button = UnityEngine.Object.Instantiate(QuickMenuStuff.SingleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance()().transform.Find(btnQMLoc), true);
+            button = UnityEngine.Object.Instantiate(QuickMenuStuff.SingleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance().transform.Find(btnQMLoc), true);
 
             initShift[0] = -1;
             initShift[1] = 0;
@@ -210,7 +210,7 @@ namespace RubyButtonAPI
         private void initButton(float btnXLocation, float btnYLocation, string btnTextOn, Action btnActionOn, string btnTextOff, Action btnActionOff, string btnToolTip, Color? btnBackgroundColor = null, Color? btnTextColorOn = null, Color? btnTextColorOff = null, bool defaultPosition = false)
         {
             btnType = "ToggleButton";
-            button = UnityEngine.Object.Instantiate<GameObject>(QuickMenuStuff.ToggleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance()().transform.Find(btnQMLoc), true);
+            button = UnityEngine.Object.Instantiate<GameObject>(QuickMenuStuff.ToggleButtonTemplate(), QuickMenuStuff.GetQuickMenuInstance().transform.Find(btnQMLoc), true);
 
             btnOn = button.transform.Find("Toggle_States_Visible/ON").gameObject;
             btnOff = button.transform.Find("Toggle_States_Visible/OFF").gameObject;
@@ -378,7 +378,7 @@ namespace RubyButtonAPI
         {
             btnType = "NestedButton";
 
-            var menu = UnityEngine.Object.Instantiate<Transform>(QuickMenuStuff.NestedMenuTemplate(), QuickMenuStuff.GetQuickMenuInstance()().transform);
+            var menu = UnityEngine.Object.Instantiate<Transform>(QuickMenuStuff.NestedMenuTemplate(), QuickMenuStuff.GetQuickMenuInstance().transform);
             menuName = QMButtonAPI.identifier + btnQMLoc + "_" + btnXLocation + "_" + btnYLocation;
             menu.name = menuName;
 
@@ -436,7 +436,7 @@ namespace RubyButtonAPI
         private static Transform NestedButtonReference;
 
         // Internal cache of the QuickMenu
-        private static Refs.QuickMenuDelegate quickmenuInstance;
+        private static QuickMenu quickmenuInstance;
 
 
 
@@ -445,7 +445,7 @@ namespace RubyButtonAPI
         public static BoxCollider QuickMenuBackground()
         {
             if (QuickMenuBackgroundReference == null)
-                QuickMenuBackgroundReference = GetQuickMenuInstance()().GetComponent<BoxCollider>();
+                QuickMenuBackgroundReference = GetQuickMenuInstance().GetComponent<BoxCollider>();
             return QuickMenuBackgroundReference;
         }
 
@@ -453,7 +453,7 @@ namespace RubyButtonAPI
         public static GameObject SingleButtonTemplate()
         {
             if (SingleButtonReference == null)
-                SingleButtonReference = GetQuickMenuInstance()().transform.Find("ShortcutMenu/WorldsButton").gameObject;
+                SingleButtonReference = GetQuickMenuInstance().transform.Find("ShortcutMenu/WorldsButton").gameObject;
             return SingleButtonReference;
         }
 
@@ -462,7 +462,7 @@ namespace RubyButtonAPI
         {
             if (ToggleButtonReference == null)
             {
-                ToggleButtonReference = GetQuickMenuInstance()().transform.Find("UserInteractMenu/BlockButton").gameObject;
+                ToggleButtonReference = GetQuickMenuInstance().transform.Find("UserInteractMenu/BlockButton").gameObject;
             }
             return ToggleButtonReference;
         }
@@ -472,15 +472,15 @@ namespace RubyButtonAPI
         {
             if (NestedButtonReference == null)
             {
-                NestedButtonReference = GetQuickMenuInstance()().transform.Find("CameraMenu");
+                NestedButtonReference = GetQuickMenuInstance().transform.Find("CameraMenu");
             }
             return NestedButtonReference;
         }
 
         // Fetch the Quick Menu instance
-        public static Refs.QuickMenuDelegate GetQuickMenuInstance()
+        public static QuickMenu GetQuickMenuInstance()
         {
-            return quickmenuInstance ??= Refs.QuickMenu;
+            return quickmenuInstance ??= Refs.instance;
         }
 
         // Cache the FieldInfo for getting the current page. Hope to god this works!
@@ -490,7 +490,7 @@ namespace RubyButtonAPI
         public static void ShowQuickmenuPage(string pagename)
         {
             var quickmenu = GetQuickMenuInstance();
-            var pageTransform = quickmenu().transform.Find(pagename);
+            var pageTransform = quickmenu.transform.Find(pagename);
             if (pageTransform == null)
             {
                 Console.WriteLine("[QMStuff] pageTransform is null !");
@@ -498,9 +498,9 @@ namespace RubyButtonAPI
 
             if (currentPageGetter == null)
             {
-                var shortcutMenu = quickmenu?.Invoke().transform.Find("ShortcutMenu").gameObject;
+                var shortcutMenu = quickmenu.transform.Find("ShortcutMenu").gameObject;
                 if (shortcutMenu != null && !shortcutMenu.activeInHierarchy)
-                    shortcutMenu = quickmenu().transform.Find("UserInteractMenu").gameObject;
+                    shortcutMenu = quickmenu.transform.Find("UserInteractMenu").gameObject;
 
                 
                 var fis = Il2CppType.Of<QuickMenu>().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == Il2CppType.Of<GameObject>()).ToArray();
@@ -508,7 +508,7 @@ namespace RubyButtonAPI
                 int count = 0;
                 foreach (var fi in fis)
                 {
-                    var value = fi.GetValue(quickmenu?.Invoke())?.TryCast<GameObject>();
+                    var value = fi.GetValue(quickmenu)?.TryCast<GameObject>();
                     if (value != shortcutMenu || ++count != 2) continue;
                     //MelonLoader.MelonLogger.Log("[QMStuff] currentPage field: " + fi.Name);
                     currentPageGetter = fi;
@@ -521,18 +521,18 @@ namespace RubyButtonAPI
                 }
             }
 
-            currentPageGetter.GetValue(quickmenu?.Invoke())?.Cast<GameObject>().SetActive(false);
+            currentPageGetter.GetValue(quickmenu)?.Cast<GameObject>().SetActive(false);
 
-            var infoBar = GetQuickMenuInstance()().transform.Find("QuickMenu_NewElements/_InfoBar").gameObject;
+            var infoBar = GetQuickMenuInstance().transform.Find("QuickMenu_NewElements/_InfoBar").gameObject;
             infoBar.SetActive(pagename == "ShortcutMenu");
 
-            QuickMenuContextualDisplay quickmenuContextualDisplay = GetQuickMenuInstance()().field_Private_QuickMenuContextualDisplay_0;
+            QuickMenuContextualDisplay quickmenuContextualDisplay = GetQuickMenuInstance().field_Private_QuickMenuContextualDisplay_0;
             quickmenuContextualDisplay.Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.NoSelection);
             //quickmenuContextualDisplay.Method_Public_Nested0_0(QuickMenuContextualDisplay.Nested0.NoSelection);
 
             pageTransform.gameObject.SetActive(true);
 
-            currentPageGetter.SetValue(quickmenu?.Invoke(), pageTransform.gameObject);
+            currentPageGetter.SetValue(quickmenu, pageTransform.gameObject);
             switch (pagename)
             {
                 case "ShortcutMenu":
@@ -550,7 +550,7 @@ namespace RubyButtonAPI
         // Set the current Quick Menu index
         public static void SetIndex(int index)
         {
-            GetQuickMenuInstance()().field_Private_Int32_0 = index;
+            GetQuickMenuInstance().field_Private_Int32_0 = index;
         }
     }
 }

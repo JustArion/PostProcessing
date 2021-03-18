@@ -2,7 +2,7 @@ using MelonLoader;
 using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
-
+#if TwoPointZero
 namespace TogglePostProcessing
 {
     internal class Bloom
@@ -30,7 +30,7 @@ namespace TogglePostProcessing
             }
             catch (Exception e)
             {
-                MelonLogger.LogError($"MelonMod Error: {e}");
+                MelonLogger.Error($"MelonMod Error: {e}");
             }
         }
         internal void ApplyBloom()
@@ -42,19 +42,19 @@ namespace TogglePostProcessing
             {
                 case EnumBloom.BloomLow:
                     UnTickAllExcept(Bloom1Bool);
-                    MelonLogger.Log("Bloom - Low Applied.");
+                    MelonLogger.Msg("Bloom - Low Applied.");
                     break;
                 case EnumBloom.BloomMedium:
                     UnTickAllExcept(Bloom2Bool);
-                    MelonLogger.Log("Bloom - Medium Applied.");
+                    MelonLogger.Msg("Bloom - Medium Applied.");
                     break;
                 case EnumBloom.BloomHigh:
                     UnTickAllExcept(Bloom3Bool);
-                    MelonLogger.Log("Bloom - High Applied.");
+                    MelonLogger.Msg("Bloom - High Applied.");
                     break;
                 case EnumBloom.BloomCustom:
                     UnTickAllExcept(Bloom4Bool);
-                    MelonLogger.Log("Bloom - Custom Applied.");
+                    MelonLogger.Msg("Bloom - Custom Applied.");
                     break;
                 default:
                     break;
@@ -78,3 +78,4 @@ namespace TogglePostProcessing
         }
     }
 }
+#endif
