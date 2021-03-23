@@ -22,7 +22,7 @@ namespace TogglePostProcessing
 
         internal const string Name = "TogglePostProcessing";
 
-        internal const string Version = "1.1.5";
+        internal const string Version = "1.1.6";
 
     }
     public sealed class TogglePostProcessing : MelonMod
@@ -42,51 +42,23 @@ namespace TogglePostProcessing
             MelonPreferences.CreateEntry("TogglePostProcessing", "DisablePostProcessing", false, "Disable Post Processing");
             //QM Stuff
             MelonPreferences.CreateEntry("TogglePostProcessing", "QMToggle", true, "QuickMenu Toggle Button");
-            #region 2.0
-#if TwoPointZero
-            MelonPrefs.RegisterFloat("TigglePostProcessing", "NightMode1", 0, "Night Mode - 1");
-            MelonPrefs.RegisterFloat("TigglePostProcessing", "NightMode2", 0, "Night Mode - 2");
-            MelonPrefs.RegisterFloat("TogglePostProcessing", "NightModeCustomLevel", 0, "Night Mode - Custom: Darkness Level");
-            ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.SettingsMenu, "Night Mode - Custom", //action);
-
-            MelonPrefs.RegisterBool("TogglePostProcessing", "BloomLow", false, "Bloom - Low");
-            MelonPrefs.RegisterBool("TogglePostProcessing", "BloomMedium", false, "Bloom - Medium");
-            MelonPrefs.RegisterBool("TogglePostProcessing", "BloomHigh", false, "Bloom - High");
-            MelonPrefs.RegisterBool("TogglePostProcessing", "BloomCustom", false, "Bloom - Custom");
-            MelonPrefs.RegisterFloat("TogglePostProcessing", "BloomCustomLevel", 0, "Bloom - Custom: Bloom Level");
-#endif
-            #endregion
             GetPrefs();
 
             Msg("Settings can be configured in UserData/modprefs.ini or through UIExpansionKit");
         }
-#if TwoPointZero
 
-        internal readonly NightMode NightMode = new NightMode();
-        internal readonly Bloom Bloom = new Bloom();
-#endif
-        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        public override void OnSceneWasLoaded(int buildIndex, string sceneName) // World Join
         {
-            switch (buildIndex)
+            switch (buildIndex) //Prevents being called 3x
             {
                 case 0:
                 case 1:
-                break;
+                    break;
                 default:
-                    try
-                    {
-                        GrabWorldVolumes();
-                        GetPrefs();
-                        ToggleMethod(ToggleHandler);
-                    #if TwoPointZero
-                        NightMode.ApplyNightMode();
-                        Bloom.ApplyBloom();
-                    #endif
-                    }
-                    catch (Exception e)
-                    {
-                        Error($"MelonMod Error: {e}");
-                    }
+                    Msg($"Grabbing PostProcessVolumes, ToggleHandler is set to {ToggleHandler}");
+                    GrabWorldVolumes();
+                    GetPrefs();
+                    ToggleMethod(ToggleHandler);
                     break;
             }
         }
@@ -101,10 +73,6 @@ namespace TogglePostProcessing
 #if QM
                 TPPQM.setActive(QMToggle);
                 TPPQM.setToggleState(!ToggleHandler);
-#endif
-#if TwoPointZero
-                NightMode.ApplyNightMode(); 
-                Bloom.ApplyBloom();
 #endif
             }
             catch (Exception e)
@@ -159,20 +127,6 @@ namespace TogglePostProcessing
                 ToggleHandler = MelonPreferences.GetEntryValue<bool>("TogglePostProcessing", "DisablePostProcessing");
                 QMToggle = MelonPreferences.GetEntryValue<bool>("TogglePostProcessing", "QMToggle");
 
-                #region 2.0
-#if TwoPointZero
-                NightMode.NightMode1Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightMode1");
-                NightMode.NightMode2Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightMode2");
-                NightMode.NightMode3Bool = MelonPrefs.GetBool("TogglePostProcessing", "NightModeCustom");
-                NightMode.NightMode3Float = MelonPrefs.GetFloat("TogglePostProcessing", "NightModeCustomLevel");
-
-                Bloom.Bloom1Bool = MelonPrefs.GetBool("TogglePostProcessing", "BloomLow");
-                Bloom.Bloom2Bool = MelonPrefs.GetBool("TogglePostProcessing", "BloomMedium");
-                Bloom.Bloom3Bool = MelonPrefs.GetBool("TogglePostProcessing", "BloomHigh");
-                Bloom.Bloom4Bool = MelonPrefs.GetBool("TogglePostProcessing", "BloomCustom");
-                Bloom.Bloom4Float = MelonPrefs.GetFloat("TogglePostProcessing", "BloomCustomLevel");
-#endif
-                #endregion
             }
             catch (Exception e)
             { 
@@ -187,7 +141,7 @@ namespace TogglePostProcessing
                 OriginalVolumes = new List<OriginalVolume>();
                 foreach (var volume in Resources.FindObjectsOfTypeAll<PostProcessVolume>())
                 {
-                    OriginalVolumes.Add(new OriginalVolume() { postProcessVolume = volume, defaultState = volume.enabled });
+                    OriginalVolumes.Add(new OriginalVolume { postProcessVolume = volume, defaultState = volume.enabled });
                 }
             }
             catch (Exception e)
@@ -212,7 +166,6 @@ namespace TogglePostProcessing
         }
         private static void ToggleMethod(bool disable)
         {
-            if (Refs.CurrentUser == null) return;
             try
             {
                 if (disable)
