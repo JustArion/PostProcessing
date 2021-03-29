@@ -23,7 +23,7 @@ namespace Dawn.PostProcessing
         private static IEnumerator GrabWorldVolumes() //Credits to Psychloor for Method
         {
             OriginalVolumes = new List<OriginalVolume>();
-            foreach (var volume in Resources.FindObjectsOfTypeAll<PostProcessVolume>())
+            foreach (var volume in Resources.FindObjectsOfTypeAll<PostProcessVolume>().Where(p => p.priority is < 1223 or > 1250 ))
             {
                 OriginalVolumes.Add(new OriginalVolume { postProcessVolume = volume, defaultState = volume.enabled });
                 yield return new OriginalVolume();
