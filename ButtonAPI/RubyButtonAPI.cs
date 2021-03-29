@@ -2,7 +2,6 @@
 using Il2CppSystem.Reflection;
 using System.Collections.Generic;
 using System.Linq;
-using TogglePostProcessing.DawnRefs;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -14,7 +13,7 @@ namespace RubyButtonAPI
     public static class QMButtonAPI
     {
     	//REPLACE THIS STRING SO YOUR MENU DOESNT COLLIDE WITH OTHER MENUS
-    	public static string identifier = "TPP";
+    	public static string identifier = "PostProcessing";
         public static Color mBackground = Color.red;
         public static Color mForeground = Color.white;
         public static Color bBackground = Color.red;
@@ -480,7 +479,7 @@ namespace RubyButtonAPI
         // Fetch the Quick Menu instance
         public static QuickMenu GetQuickMenuInstance()
         {
-            return quickmenuInstance ??= Refs.instance;
+            return quickmenuInstance ??= Dawn.PostProcessing.Core.instance;
         }
 
         // Cache the FieldInfo for getting the current page. Hope to god this works!

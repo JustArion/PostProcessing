@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Dawn.TPP{
+namespace Dawn.PostProcessing {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Dawn.TPP{
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TogglePostProcessing.Rewrite.PostProcessAssets", typeof(PostProcessAssets).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PostProcessing.PostProcessAssets", typeof(PostProcessAssets).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
