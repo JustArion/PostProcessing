@@ -1,9 +1,20 @@
 # PostProcessing
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/arion-kun/PostProcessing?style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/releases/latest)
-[![GitHub all releases](https://img.shields.io/github/downloads/arion-kun/PostProcessing/total?label=Total%20Downloads&style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/releases/)
-[![GitHub release (latest by date)](https://img.shields.io/github/downloads/arion-kun/PostProcessing/latest/total?label=Latest%20Version%20Downloads&style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/releases/latest)
-[![GitHub stars](https://img.shields.io/github/stars/Arion-Kun/PostProcessing?style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/stargazers)
-[![Github License](https://img.shields.io/github/license/arion-kun/PostProcessing?color=blue&style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/raw/master/LICENSE)
+
+<a href="https://github.com/Arion-Kun/PostProcessing/releases/latest">
+      <img src="https://img.shields.io/github/v/release/arion-kun/PostProcessing?style=for-the-badge" alt="" />
+</a>
+<a href="https://github.com/Arion-Kun/PostProcessing/releases/">
+      <img src="https://img.shields.io/github/downloads/arion-kun/PostProcessing/total?label=Total%20Downloads&style=for-the-badge" alt="" />
+</a>
+<a href="https://github.com/Arion-Kun/PostProcessing/releases/latest">
+      <img src="https://img.shields.io/github/downloads/arion-kun/PostProcessing/latest/total?label=Latest%20Version%20Downloads&style=for-the-badge" alt="" />
+</a>
+<a href="https://github.com/Arion-Kun/PostProcessing/stargazers">
+      <img src="https://img.shields.io/github/stars/Arion-Kun/PostProcessing?style=for-the-badge" alt="" />
+</a>
+<a href="https://github.com/Arion-Kun/PostProcessing/raw/master/LICENSE">
+      <img src="https://img.shields.io/github/license/arion-kun/PostProcessing?color=blue&style=for-the-badge" alt="" />
+</a>
 
 [![Download](https://img.shields.io/badge/%20-Download-blue?style=for-the-badge&logo=appveyor)](https://github.com/Arion-Kun/PostProcessing/releases/latest)
 ### Changelog
