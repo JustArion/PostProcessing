@@ -42,6 +42,8 @@ namespace Dawn.PostProcessing
             { // Example: 75 *- 0.0888 = -6.66 which is our intended value for 75%, doing this, 100 would be -8.88, 50 would be -4.44 all down to 0
                 var cleanedValue = value *- 0.0888f;
                 s_DarkMode.m_PostProcessProfile.GetSetting<ColorGrading>().postExposure.value = cleanedValue; 
+                // Darkness value is intentionally set to be able to go VERY dark to be able to be used as a panic button to prevent seizures.
+                // This will be more compatible when I can get Post Processing not to apply to the UI (See LayerArrayCache)
             }
         }
 
