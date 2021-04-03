@@ -16,7 +16,7 @@
       <img src="https://img.shields.io/github/license/arion-kun/PostProcessing?color=blue&style=for-the-badge" alt="" />
 </a>
 
-[![Download](https://img.shields.io/badge/%20-Download-blue?style=for-the-badge&logo=appveyor)](https://github.com/Arion-Kun/PostProcessing/releases/latest)
+[![Download](https://img.shields.io/badge/%20-Download-blue?style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/releases/latest)
 ### Changelog
 Whats New:
 > Release: [2.0](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.0)
