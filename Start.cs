@@ -72,5 +72,6 @@ namespace Dawn.PostProcessing
             Warning("The mod can be found on Github at: https://github.com/knah/VRCMods/releases");
             Warning("or alternatively under the #finished-mods section in the VRChat Modding Group Discord.");
         }
+
     }
 }

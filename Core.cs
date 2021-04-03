@@ -3,7 +3,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Il2CppSystem.Security.Cryptography;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -13,7 +12,7 @@ namespace Dawn.PostProcessing
 {
     internal static class Core
     {
-        internal const string ModID = "TogglePostProcessing";
+        internal const string ModID = "PostProcessing";
         internal static bool s_UICreated = false;
         internal static bool s_PostProcessing;
         internal static bool s_QuickMenu;
@@ -39,14 +38,15 @@ namespace Dawn.PostProcessing
             MelonPreferences.CreateEntry(ModID, "Temperature", false);
             #endregion
             #region Volume Weights
-            MelonPreferences.CreateEntry(ModID, "Dark-Weight", 10f, "Darkness Level (0 -> 100) (WARNING: 20 is enough!)");
+            MelonPreferences.CreateEntry(ModID, "Dark-Weight", 10f, "Darkness Level (0 -> 100) (WARNING: 50 is enough");
             MelonPreferences.CreateEntry(ModID, "Bloom-Weight", 75f, "Bloom Level (0 -> 100)");
             MelonPreferences.CreateEntry(ModID, "Saturation-Weight", 50f, "Saturation Level (0 -> 100)");
             MelonPreferences.CreateEntry(ModID, "Contrast-Weight", 50f, "Contrast Level (0 -> 100)");
             MelonPreferences.CreateEntry(ModID, "Temperature-Weight", 10f, "Temperature Level (0 -> 100)");
             #endregion
             #region Profile Values
-            MelonPreferences.CreateEntry(ModID, "BrightnessValue", 5f, "Advanced: Brightness Value (-100 -> 100)"); // Not Working
+            MelonPreferences.CreateEntry(ModID, "DarknessValue", 20f, "Advanced: Darkness Value (0 -> 100)");
+            MelonPreferences.CreateEntry(ModID, "BloomValue", 20f, "Advanced: Bloom Value (0 -> 100)");
             MelonPreferences.CreateEntry(ModID, "ContrastValue", -50f, "Advanced: Contrast Value (-90 -> 90)");
             MelonPreferences.CreateEntry(ModID, "SaturationValue", 50f, "Advanced: Saturation Value (-100 -> 100)");
             MelonPreferences.CreateEntry(ModID, "TemperatureValue", 45f, "Advanced: Temperature Value (-100 (Blue) -> 100 (Red))");
@@ -86,7 +86,8 @@ namespace Dawn.PostProcessing
             CustomPostProcessing.s_Temperature.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Temperature");
             #endregion
             #region Profile Values
-            CustomPostProcessing.m_BrightnessValue = MelonPreferences.GetEntryValue<float>(ModID, "BrightnessValue").Stabalize(-100, 100);
+            CustomPostProcessing.m_DarknessValue = MelonPreferences.GetEntryValue<float>(ModID, "DarknessValue").Stabalize(0, 100);
+            CustomPostProcessing.m_BloomValue = MelonPreferences.GetEntryValue<float>(ModID, "BloomValue").Stabalize(0, 100);
             CustomPostProcessing.m_ContrastValue = MelonPreferences.GetEntryValue<float>(ModID, "ContrastValue").Stabalize(-90, 90);
             CustomPostProcessing.m_SaturationValue = MelonPreferences.GetEntryValue<float>(ModID, "SaturationValue").Stabalize(-100, 100);
             CustomPostProcessing.m_TemperatureValue = MelonPreferences.GetEntryValue<float>(ModID, "TemperatureValue").Stabalize(-100, 100);
@@ -230,6 +231,10 @@ namespace Dawn.PostProcessing
             get
             {
                 if (MainCameraCache != null) return MainCameraCache;
+                if (Camera.main is not null && Camera.main.gameObject.GetComponent<SteamVR_Camera>() != null)
+                {
+                    return Camera.main;
+                }
                 foreach (var cam in Camera.allCameras)
                 {
                     if (cam.gameObject.GetComponent<SteamVR_Camera>() == null) continue;

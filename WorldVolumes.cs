@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using MelonLoader;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -18,37 +16,34 @@ namespace Dawn.PostProcessing
         {
             internal PostProcessVolume postProcessVolume;
             internal bool defaultState;
+            
         }
 
-        private static IEnumerator GrabWorldVolumes() //Credits to Psychloor for Method
+        private static void GrabWorldVolumes() //Credits to Psychloor for Method
         {
             OriginalVolumes = new List<OriginalVolume>();
             foreach (var volume in Resources.FindObjectsOfTypeAll<PostProcessVolume>().Where(p => p.priority is < 1223 or > 1250 ))
             {
                 OriginalVolumes.Add(new OriginalVolume { postProcessVolume = volume, defaultState = volume.enabled });
-                yield return new OriginalVolume();
             }
-            m_PreviousState = false; // Reset on World Join.
         }
 
         internal static void WorldJoin()
         {
-            MelonCoroutines.Start(GrabWorldVolumes());
+            GrabWorldVolumes();
             ToggleWorldVolumes();
         }
-        private static bool m_PreviousState;
         internal static void ToggleWorldVolumes()
         {
             try
             {
-                if (!WorldPostProcessing && m_PreviousState != !WorldPostProcessing)
+                if (OriginalVolumes == null) return;
+                if (!WorldPostProcessing)
                 {
-                    if (OriginalVolumes == null) return;
                     foreach (var originalVolume in OriginalVolumes.Where(originalVolume => originalVolume.postProcessVolume))
                     {
                         originalVolume.postProcessVolume.enabled = false;
                     }
-                    m_PreviousState = !WorldPostProcessing;
                 }
                 else
                 {

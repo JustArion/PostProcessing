@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using MelonLoader;
-using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-using UnityEngineInternal;
 using Object = UnityEngine.Object;
-using Stream = Il2CppSystem.IO.Stream;
 
 namespace Dawn.PostProcessing
 {
@@ -91,7 +83,7 @@ namespace Dawn.PostProcessing
                             break;
                     }
                 }
-
+                #region Loading
                 CustomPostProcessing.m_Bloom = tmp_Bloom.TryCast<PostProcessProfile>();
                 CustomPostProcessing.m_Bloom.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
@@ -108,8 +100,9 @@ namespace Dawn.PostProcessing
                 CustomPostProcessing.m_Temperature.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
 
-                CustomPostProcessing.CachedResources = tmp_CachedResources.TryCast<PostProcessResources>();
+                CustomPostProcessing.CachedResources = tmp_CachedResources.TryCast<PostProcessResources>(); // Majority of the file-size comes from this sadly.
                 CustomPostProcessing.CachedResources.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+                #endregion
             }
             catch (Exception e)
             {

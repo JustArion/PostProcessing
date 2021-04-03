@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading;
 using Dawn.PostProcessing.PostProcessObjects;
 using MelonLoader;
-using UnhollowerBaseLib;
-using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using Object = UnityEngine.Object;
@@ -28,7 +24,7 @@ namespace Dawn.PostProcessing
 
         internal static bool m_ObjectsCreated = false;
         #region Junk for Later
-        internal static CustomVolume s_DarkMode;
+        internal static CustomVolume s_DarkMode; // Separate volumes as m_PostProcessVolume.weight is a factor.
         internal static CustomVolume s_Saturation;
         internal static CustomVolume s_Bloom;
         internal static CustomVolume s_Contrast;
@@ -40,48 +36,53 @@ namespace Dawn.PostProcessing
         internal static PostProcessProfile m_Contrast;
         internal static PostProcessProfile m_Temperature;
 
-        // Better Solutions to this are welcome!
-        internal static float m_BrightnessValue
+        internal static float m_DarknessValue // Shouldn't need a try/catch (let's hope)
         {
-            set
-            {
-                foreach (var x in s_DarkMode.m_PostProcessProfile.settings) { x.TryCast<ColorGrading>().brightness.value = value; }
+            set //Value is stabilized here to be manageable (0 -> 100)
+            { // Example: 75 *- 0.0888 = -6.66 which is our intended value for 75%, doing this, 100 would be -8.88, 50 would be -4.44 all down to 0
+                var cleanedValue = value *- 0.0888f;
+                s_DarkMode.m_PostProcessProfile.GetSetting<ColorGrading>().postExposure.value = cleanedValue; 
             }
         }
-        internal static float m_SaturationValue
+
+        internal static float m_BloomValue
         {
-            set
-            {
-                foreach (var x in s_Saturation.m_PostProcessProfile.settings) { x.TryCast<ColorGrading>().saturation.value = value; }
+            set //Value is stabilized here to be manageable (0 -> 100)
+            { // Example: 20 / 10 = 2 which is our intended value, the scale is 0-10 for clean range.
+                var cleanedvalue = value / 10;
+                s_Bloom.m_PostProcessProfile.GetSetting<Bloom>().intensity.value = cleanedvalue;
             }
         }
-        internal static float m_ContrastValue
+        internal static float m_SaturationValue // Doesn't need to be stabilized.
         {
-            set
-            {
-                foreach (var x in s_Contrast.m_PostProcessProfile.settings) { x.TryCast<ColorGrading>().contrast.value = value; }
-            }
+            set => s_Saturation.m_PostProcessProfile.GetSetting<ColorGrading>().saturation.value = value;
         }
-        internal static float m_TemperatureValue
+        internal static float m_ContrastValue // Doesn't need to be stabilized, -90 -> 90 is fine, -100 would leave a white screen so we don't give people that option.
         {
-            set
-            {
-                foreach (var x in s_Temperature.m_PostProcessProfile.settings) { x.TryCast<ColorGrading>().temperature.value = value; }
-            }
+            set => s_Contrast.m_PostProcessProfile.GetSetting<ColorGrading>().contrast.value = value;
+        }
+        internal static float m_TemperatureValue// Doesn't need to be stabilized.
+        {
+            set => s_Temperature.m_PostProcessProfile.GetSetting<ColorGrading>().temperature.value = value;
         }
         #endregion
         private static void CreateCustomObjects() // Priority Limit: 1223 -> 1250 (For Volume ID Purposes)
         {
             s_DarkMode = new CustomVolume("Dark-Mode", m_DarkMode, 0.2f);
             s_DarkMode.m_PostProcessVolume.priority = 1224; // Should be the Highest in this case.
+            m_DarkMode = null; // We unload this as we don't need it anymore, unloading any lower causes unity to force an unload. eg. Assets.cs #Region Loading
             
             s_Saturation = new CustomVolume("Saturation", m_Saturation, 1f);
+            m_Saturation = null;
 
             s_Bloom = new CustomVolume("Bloom", m_Bloom, 1f);
-            
+            m_Bloom = null;
+
             s_Contrast = new CustomVolume("Contrast", m_Contrast, 0.2f);
+            m_Contrast = null;
 
             s_Temperature = new CustomVolume("Temperature", m_Temperature, 1f);
+            m_Temperature = null;
         }
         
         internal static void WorldJoin()
@@ -127,8 +128,10 @@ namespace Dawn.PostProcessing
                 }
             }
             var PPL = MainCamera.gameObject.AddComponent<PostProcessLayer>();
-            
-            PPL.hideFlags = HideFlags.DontUnloadUnusedAsset;
+
+            PPL.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing; // FXAA
+            var FXAA = new FastApproximateAntialiasing {fastMode = true, keepAlpha = true};
+            PPL.fastApproximateAntialiasing = FXAA;
             PPL.volumeTrigger = MainCamera.transform;
             PPL.m_ShowCustomSorter = true;
             PPL.m_Resources = CachedResources;
