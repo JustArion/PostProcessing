@@ -37,8 +37,6 @@ Whats New:
 
 Bugs to fix before [2.0](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.0) Release:
 > 
-> Advanced Values don't adjust // foreach to get 1 value -> TryGetSettings / GetSettings
-> 
 > Doesn't work in VR : Split screen
 > 
 
