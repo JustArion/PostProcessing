@@ -4,7 +4,7 @@
       <img src="https://img.shields.io/github/v/release/arion-kun/PostProcessing?style=for-the-badge" alt="" />
 </a>
 <a href="https://github.com/Arion-Kun/PostProcessing/releases/">
-      <img src="https://img.shields.io/github/downloads/arion-kun/PostProcessing/total?label=Total%20Downloads&style=for-the-badge" alt="" />
+      <img src="https://img.shields.io/github/downloads/arion-kun/PostProcessing/total?label=Total%20Downloads&style=for-the-badge&color=darkgreen" alt="" />
 </a>
 <a href="https://github.com/Arion-Kun/PostProcessing/releases/latest">
       <img src="https://img.shields.io/github/downloads/arion-kun/PostProcessing/latest/total?label=Latest%20Version%20Downloads&style=for-the-badge" alt="" />
