@@ -34,6 +34,13 @@ Whats New:
 >   * Toggle ONLY World's Default Post Processing
 >
 > Post Process Presets can be adjusted using [UI Expansion Kit](https://github.com/knah/VRCMods/tree/master/UIExpansionKit)
+<br>
+> Bugs to fix before 2.0 Release:
+> 
+> Advanced Values don't adjust // foreach to get 1 value -> TryGetSettings / GetSettings
+> 
+> Doesn't work in VR : Split screen
+> 
 
 ### Extra
   <p align=center>
