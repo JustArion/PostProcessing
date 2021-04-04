@@ -38,16 +38,16 @@ namespace Dawn.PostProcessing
             MelonPreferences.CreateEntry(ModID, "Temperature", false);
             #endregion
             #region Volume Weights
-            MelonPreferences.CreateEntry(ModID, "Dark-Weight", 10f, "Darkness Level (0 -> 100) (WARNING: 50 is enough");
+            MelonPreferences.CreateEntry(ModID, "Dark-Weight", 50f, "Darkness Level (0 -> 100) (WARNING: 50 is enough");
             MelonPreferences.CreateEntry(ModID, "Bloom-Weight", 75f, "Bloom Level (0 -> 100)");
-            MelonPreferences.CreateEntry(ModID, "Saturation-Weight", 50f, "Saturation Level (0 -> 100)");
+            MelonPreferences.CreateEntry(ModID, "Saturation-Weight", 100f, "Saturation Level (0 -> 100)");
             MelonPreferences.CreateEntry(ModID, "Contrast-Weight", 50f, "Contrast Level (0 -> 100)");
-            MelonPreferences.CreateEntry(ModID, "Temperature-Weight", 10f, "Temperature Level (0 -> 100)");
+            MelonPreferences.CreateEntry(ModID, "Temperature-Weight", 50f, "Temperature Level (0 -> 100)");
             #endregion
             #region Profile Values
-            MelonPreferences.CreateEntry(ModID, "DarknessValue", 20f, "Advanced: Darkness Value (0 -> 100)");
+            MelonPreferences.CreateEntry(ModID, "DarknessValue", 50f, "Advanced: Darkness Value (0 -> 100)");
             MelonPreferences.CreateEntry(ModID, "BloomValue", 20f, "Advanced: Bloom Value (0 -> 100)");
-            MelonPreferences.CreateEntry(ModID, "ContrastValue", -50f, "Advanced: Contrast Value (-90 -> 90)");
+            MelonPreferences.CreateEntry(ModID, "ContrastValue", 0f, "Advanced: Contrast Value (-90 -> 90)");
             MelonPreferences.CreateEntry(ModID, "SaturationValue", 50f, "Advanced: Saturation Value (-100 -> 100)");
             MelonPreferences.CreateEntry(ModID, "TemperatureValue", 45f, "Advanced: Temperature Value (-100 (Blue) -> 100 (Red))");
             #endregion
