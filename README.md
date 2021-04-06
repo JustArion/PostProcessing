@@ -40,6 +40,10 @@ Bugs to fix before [2.0](https://github.com/Arion-Kun/PostProcessing/releases/ta
 > Doesn't work in VR : Split screen (Fix pending testing)
 > 
 
+Planned for [2.1](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.1) Release:
+>
+> Post Processing doesn't apply to the UI making full-Dark-Mode possible as a fallback-panic button for seizures.
+
 ### Extra
   <p align=center>
     <a href="https://youtu.be/K7XHy8nppf4">
