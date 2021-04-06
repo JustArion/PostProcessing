@@ -17,6 +17,7 @@
 </a>
 
 [![Download](https://img.shields.io/badge/%20-Download-darkgreen?style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/releases/latest)
+
 ### Changelog
 Whats New:
 > Release: [2.0](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.0)
@@ -43,6 +44,11 @@ Bugs to fix before [2.0](https://github.com/Arion-Kun/PostProcessing/releases/ta
 Planned for [2.1](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.1) Release:
 >
 > Post Processing doesn't apply to the UI making full-Dark-Mode possible as a fallback-panic button for seizures.
+
+### Preview
+
+![Post-Processing-2.0-Preview](https://cdn.discordapp.com/attachments/826459638383640617/829086300148990052/VRChat-Dawn-1402-819-3Q.png)
+
 
 ### Extra
   <p align=center>
