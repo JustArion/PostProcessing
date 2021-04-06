@@ -37,7 +37,7 @@ Whats New:
 
 Bugs to fix before [2.0](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.0) Release:
 > 
-> Doesn't work in VR : Split screen
+> Doesn't work in VR : Split screen (Fix pending testing)
 > 
 
 ### Extra
