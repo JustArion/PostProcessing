@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using MelonLoader;
+using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using static MelonLoader.MelonLogger;
 
 namespace Dawn.PostProcessing
@@ -21,6 +23,14 @@ namespace Dawn.PostProcessing
             Core.RegisterSettings();
             
             UIXAdvert();
+        }
+
+        public override void OnSceneWasInitialized(int buildIndex, string sceneName)
+        {
+            if (buildIndex != 0) return; // PPR = <PostProcessResources>
+            // Hopefully throwing a Resource lookup in here so early will negate having it called later as a fallback
+            // As the game's PPR should be priority 1 and my own priority 2 as a fallback if the home world upon first launch doesn't contain PPR
+            CustomPostProcessing.CachedResources = Resources.FindObjectsOfTypeAll<PostProcessResources>().FirstOrDefault(n => n.name == "DefaultPostProcessResources");
         }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName) // World Join

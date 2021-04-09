@@ -11,7 +11,7 @@ namespace Dawn.PostProcessing
     {
         internal static IEnumerator LoadAssets()
         {
-            var resourceStream = (byte[]) PostProcessAssets.ResourceManager.GetObject("dawn");
+            var resourceStream = PostProcessAssets.dawn;
             if (resourceStream != null)
             {
                 
@@ -36,9 +36,7 @@ namespace Dawn.PostProcessing
             }
             else
             {
-                Core.Log(
-                    "Asset Resource Stream is null! Please Report this in the #bug-report channel in the VRC Modding Group.",
-                    Core.LogType.Error);
+                Core.Log("Asset Resource Stream is null! Please Report this in the #bug-report channel in the VRC Modding Group.", Core.LogType.Error);
             }
         }
 

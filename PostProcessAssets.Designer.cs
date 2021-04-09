@@ -59,5 +59,14 @@ namespace Dawn.PostProcessing {
                 resourceCulture = value;
             }
         }
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] dawn {
+            get {
+                object obj = ResourceManager.GetObject("dawn", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

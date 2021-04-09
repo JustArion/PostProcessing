@@ -121,13 +121,9 @@ namespace Dawn.PostProcessing
                 Log("Using Cached <PostProcessResources>");
             }
             else
-            {            
-                CachedResources = Resources.FindObjectsOfTypeAll<PostProcessResources>().FirstOrDefault(n => n.name == "DefaultPostProcessResources"); // Remove / Improve
-                if (CachedResources == null)
-                {
-                    MelonLogger.Error("Could not find the Resources necessary to construct Post Processing in a Non-PostProcessing World!");
-                    return;
-                }
+            { // Resources Lookup moved to OnSceneInitialize
+                MelonLogger.Error("Could not find the Resources necessary to construct Post Processing in a Non-PostProcessing World!");
+                return;
             }
             var PPL = MainCamera.gameObject.AddComponent<PostProcessLayer>();
 

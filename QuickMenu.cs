@@ -24,7 +24,7 @@ namespace Dawn.PostProcessing
                     WorldVolumes.ToggleWorldVolumes();
                     return;
                 }
-                MelonPreferences.SetEntryValue(Core.ModID, "Enable PostProcessing", true);
+                MelonPreferences.SetEntryValue(Core.ModID, "PostProcessing", true);
                 Core.s_PostProcessing = true;
                 Core.LayerChange();
             }, "OFF", () =>
@@ -36,10 +36,10 @@ namespace Dawn.PostProcessing
                     WorldVolumes.ToggleWorldVolumes();
                     return;
                 }
-                MelonPreferences.SetEntryValue(Core.ModID, "Enable PostProcessing", false);
+                MelonPreferences.SetEntryValue(Core.ModID, "PostProcessing", false);
                 Core.s_PostProcessing = false;
                 Core.LayerChange();
-            }, "PostProcessing");
+            }, "Post Processing");
             TPPQM.btnOff.SetSizeButtonfor(QMX, QMY);
             TPPQM.btnOn.SetSizeButtonfor(QMX, QMY);
             TPPQM.getGameObject().SetSizeButtonfor(1.9f, 1.8f);
