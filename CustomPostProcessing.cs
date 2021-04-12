@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dawn.PostProcessing.PostProcessObjects;
 using MelonLoader;
+using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using Object = UnityEngine.Object;
@@ -86,10 +87,20 @@ namespace Dawn.PostProcessing
             s_Temperature = new CustomVolume("Temperature", m_Temperature, 1f);
             m_Temperature = null;
         }
-        
+
+        // private static LayerMask CachedWorldJoinMask;
         internal static void WorldJoin()
         {
-            if (MainCamera.gameObject.GetComponent<PostProcessLayer>() != null) return;
+            var PPL = MainCamera.gameObject.GetComponent<PostProcessLayer>();
+            // if (PPL != null)
+            // {
+            //     CachedWorldJoinMask = PPL.volumeLayer;
+            //     //PPL.volumeLayer = LayerMask.GetMask(m_LayerArray);
+            //     //PPL.volumeLayer = ~LayerMask.GetMask(new[]{"UI", "UiMenu"}); // Doesn't work rn;
+            //     Console.WriteLine($@"Old Mask: {CachedWorldJoinMask.value}");
+            //     Console.WriteLine($@"New Mask: {PPL.volumeLayer.value}");
+            //     return;
+            // }
             Log("World is detected to contain no PostProcessLayer. Adding one manually.");
             SetupPostProcessing();
         }
@@ -134,28 +145,29 @@ namespace Dawn.PostProcessing
             PPL.m_ShowCustomSorter = true;
             PPL.m_Resources = CachedResources;
 
-            PPL.volumeLayer = -1; //LayerMask.GetMask(m_LayerArray); // Gonna Try To Make this work @ Some Point
+            PPL.volumeLayer = ~LayerMask.GetMask(new[]{"UI", "UiMenu"}); // This sadly doesn't work rn :/
+                //LayerMask.GetMask(m_LayerArray); //-1; //LayerMask.GetMask(m_LayerArray); // Gonna Try To Make this work @ Some Point
             PPL.enabled = s_PostProcessing;
         }
 
         private static string[] m_LayerArrayCache;
-        static string[] m_LayerArray //Should Return everything except UI layers.
+        private static string[] m_LayerArray //Should Return everything except UI layers.
         {
             get
             {
                 if (m_LayerArrayCache != null) return m_LayerArrayCache;
                 var List = new List<string>();
-                for (var i = 0; i < 35; i++)
+                for (var i = 0; i < 32; i++)
                 {
                     // If the layer Doesnt Contain "UI"
-                    if (!LayerMask.LayerToName(i).ToUpper().Contains("UI"))
+                    if (!LayerMask.LayerToName(i).ToUpper().Contains("UI") && !string.IsNullOrWhiteSpace(LayerMask.LayerToName(i)))
                     {
                         List.Add(LayerMask.LayerToName(i));
+                        
                     }
                 }
                 m_LayerArrayCache = List.ToArray();
                 return m_LayerArrayCache;
-
             }
         }
 

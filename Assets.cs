@@ -53,8 +53,8 @@ namespace Dawn.PostProcessing
             tmp_Bloom = abR2.asset as PostProcessProfile;
             tmp_DSC = abR3.asset as PostProcessProfile;
         }*/
-        private static void GenerateInstances()
-        {
+        private static void GenerateInstances() // Maybe a better way?
+        { 
             try 
             {
                 foreach (var obj in m_AssetBundle.LoadAllAssets()) //tmp prefix as it will auto-unload from memory soon.
