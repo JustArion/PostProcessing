@@ -36,10 +36,6 @@ Whats New:
 >
 > Post Process Presets can be adjusted using [UI Expansion Kit](https://github.com/knah/VRCMods/tree/master/UIExpansionKit)
 
-Bugs to fix before [2.0](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.0) Release:
-> 
-> Doesn't work in VR : Split screen (Fix pending testing)
-> 
 
 Planned for [2.1](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.1) Release:
 >
