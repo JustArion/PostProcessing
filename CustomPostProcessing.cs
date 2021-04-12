@@ -92,7 +92,7 @@ namespace Dawn.PostProcessing
         internal static void WorldJoin()
         {
             var PPL = MainCamera.gameObject.GetComponent<PostProcessLayer>();
-            if (PPL) return;
+            if (PPL != null) return;
             // if (PPL != null)
             // {
             //     CachedWorldJoinMask = PPL.volumeLayer;
