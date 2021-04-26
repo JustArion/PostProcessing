@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.UI;
 using static MelonLoader.MelonLogger;
 
 namespace Dawn.PostProcessing
@@ -65,13 +67,7 @@ namespace Dawn.PostProcessing
             Core.InternalSettingsRefresh(); // Object Sync
         }
 
-        public override void OnPreferencesSaved()
-        {
-            Core.InternalSettingsRefresh(); 
-        #if QM
-            QuickMenus.QMPrefsRefresh();
-        #endif
-        }
+        public override void OnPreferencesSaved() => Core.InternalSettingsRefresh();
 
         private static void UIXAdvert()
         {

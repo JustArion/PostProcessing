@@ -37,7 +37,7 @@ namespace Dawn.PostProcessing
         {
             try
             {
-                if (OriginalVolumes == null) return;
+                if (OriginalVolumes == null || Core.IsInWorld) return;
                 if (!WorldPostProcessing)
                 {
                     foreach (var originalVolume in OriginalVolumes.Where(originalVolume => originalVolume.postProcessVolume))

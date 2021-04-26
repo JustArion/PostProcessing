@@ -18,7 +18,7 @@ namespace Dawn.PostProcessing
         internal static bool s_QuickMenu;
         
         private static bool isInstantiated => CurrentUser != null && IsInWorld;
-        private static bool IsInWorld => currentRoom != null || currentWorldInstance != null;
+        internal static bool IsInWorld => currentRoom != null || currentWorldInstance != null;
 
         internal static void RegisterSettings()
         {
@@ -47,7 +47,7 @@ namespace Dawn.PostProcessing
             #region Profile Values
             MelonPreferences.CreateEntry(ModID, "DarknessValue", 50f, "Advanced: Darkness Value (0 -> 100)");
             MelonPreferences.CreateEntry(ModID, "BloomValue", 20f, "Advanced: Bloom Value (0 -> 100)");
-            MelonPreferences.CreateEntry(ModID, "ContrastValue", 0f, "Advanced: Contrast Value (-90 -> 90)");
+            MelonPreferences.CreateEntry(ModID, "ContrastValue", 25f, "Advanced: Contrast Value (-90 -> 90)");
             MelonPreferences.CreateEntry(ModID, "SaturationValue", 50f, "Advanced: Saturation Value (-100 -> 100)");
             MelonPreferences.CreateEntry(ModID, "TemperatureValue", 45f, "Advanced: Temperature Value (-100 (Blue) -> 100 (Red))");
             #endregion
@@ -56,42 +56,69 @@ namespace Dawn.PostProcessing
         }
         internal static void InternalSettingsRefresh()
         {
-            s_PostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "PostProcessing");
-            s_QuickMenu = MelonPreferences.GetEntryValue<bool>(ModID, "QMToggle");
-
-            if (!s_UICreated) return; //Prevents Errors when other mods call OnPreferencesSaved();
-            var ProcessLayer = MainCamera.gameObject.GetComponent<PostProcessLayer>();
-            if (ProcessLayer != null)
+            var debugLineCount = 0;
+            try
             {
-                ProcessLayer.enabled = s_PostProcessing;
+                s_PostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "PostProcessing");
+                debugLineCount++;
+                s_QuickMenu = MelonPreferences.GetEntryValue<bool>(ModID, "QMToggle");
+                debugLineCount++;
+                
+                if (!s_UICreated) return; //Prevents Errors when other mods call OnPreferencesSaved();
+                debugLineCount++;
+                var ProcessLayer = MainCamera.gameObject.GetComponent<PostProcessLayer>();
+                debugLineCount++;
+                if (ProcessLayer != null)
+                {
+                    ProcessLayer.enabled = s_PostProcessing;
+                }
+                debugLineCount++;
+                
+                WorldVolumes.WorldQMToggle = MelonPreferences.GetEntryValue<bool>(ModID, "WorldQMToggle");
+                debugLineCount++;
+                WorldVolumes.WorldPostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "WorldPostProcessing");
+                debugLineCount++;
+                WorldVolumes.ToggleWorldVolumes();
+                debugLineCount++;
+
+                if (!CustomPostProcessing.m_ObjectsCreated) return;
+                debugLineCount++;
+                #region Volume Weights
+                CustomPostProcessing.s_DarkMode.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Dark-Weight") / 100).Stabalize(0, 90f);
+                CustomPostProcessing.s_Bloom.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Bloom-Weight") / 100).Stabalize(0, 100f);
+                CustomPostProcessing.s_Saturation.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Saturation-Weight") / 100).Stabalize(0, 100f);
+                CustomPostProcessing.s_Contrast.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Contrast-Weight") / 100).Stabalize(0, 90f);
+                CustomPostProcessing.s_Temperature.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Temperature-Weight") / 100).Stabalize(0, 100f);
+                #endregion
+                #region Object States
+                CustomPostProcessing.s_DarkMode.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Dark-Mode");
+                CustomPostProcessing.s_Bloom.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Bloom");
+                CustomPostProcessing.s_Saturation.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Saturation");
+                CustomPostProcessing.s_Contrast.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Contrast");
+                CustomPostProcessing.s_Temperature.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Temperature");
+                #endregion
+                #region Profile Values
+                CustomPostProcessing.m_DarknessValue = MelonPreferences.GetEntryValue<float>(ModID, "DarknessValue").Stabalize(0, 100);
+                CustomPostProcessing.m_BloomValue = MelonPreferences.GetEntryValue<float>(ModID, "BloomValue").Stabalize(0, 100);
+                CustomPostProcessing.m_ContrastValue = MelonPreferences.GetEntryValue<float>(ModID, "ContrastValue").Stabalize(-90, 90);
+                CustomPostProcessing.m_SaturationValue = MelonPreferences.GetEntryValue<float>(ModID, "SaturationValue").Stabalize(-100, 100);
+                CustomPostProcessing.m_TemperatureValue = MelonPreferences.GetEntryValue<float>(ModID, "TemperatureValue").Stabalize(-100, 100);
+                #endregion
+            
+                #if QM
+                QuickMenus.QMPrefsRefresh();
+                #endif
             }
-
-            WorldVolumes.WorldQMToggle = MelonPreferences.GetEntryValue<bool>(ModID, "WorldQMToggle");
-            WorldVolumes.WorldPostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "WorldPostProcessing");
-            WorldVolumes.ToggleWorldVolumes();
-
-            if (!CustomPostProcessing.m_ObjectsCreated) return;
-            #region Volume Weights
-            CustomPostProcessing.s_DarkMode.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Dark-Weight") / 100).Stabalize(0, 90f);
-            CustomPostProcessing.s_Bloom.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Bloom-Weight") / 100).Stabalize(0, 100f);
-            CustomPostProcessing.s_Saturation.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Saturation-Weight") / 100).Stabalize(0, 100f);
-            CustomPostProcessing.s_Contrast.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Contrast-Weight") / 100).Stabalize(0, 90f);
-            CustomPostProcessing.s_Temperature.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Temperature-Weight") / 100).Stabalize(0, 100f);
-            #endregion
-            #region Object States
-            CustomPostProcessing.s_DarkMode.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Dark-Mode");
-            CustomPostProcessing.s_Bloom.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Bloom");
-            CustomPostProcessing.s_Saturation.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Saturation");
-            CustomPostProcessing.s_Contrast.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Contrast");
-            CustomPostProcessing.s_Temperature.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Temperature");
-            #endregion
-            #region Profile Values
-            CustomPostProcessing.m_DarknessValue = MelonPreferences.GetEntryValue<float>(ModID, "DarknessValue").Stabalize(0, 100);
-            CustomPostProcessing.m_BloomValue = MelonPreferences.GetEntryValue<float>(ModID, "BloomValue").Stabalize(0, 100);
-            CustomPostProcessing.m_ContrastValue = MelonPreferences.GetEntryValue<float>(ModID, "ContrastValue").Stabalize(-90, 90);
-            CustomPostProcessing.m_SaturationValue = MelonPreferences.GetEntryValue<float>(ModID, "SaturationValue").Stabalize(-100, 100);
-            CustomPostProcessing.m_TemperatureValue = MelonPreferences.GetEntryValue<float>(ModID, "TemperatureValue").Stabalize(-100, 100);
-            #endregion
+            catch (Exception e)
+            {
+                MelonLogger.Error(e);
+                if (debugLineCount >= 8)
+                {
+                    MelonLogger.Error($"Error in line {debugLineCount}");
+                    return;
+                }
+                MelonLogger.Error("Error Occurred on lines greater than 9");
+            }
         }
 
         private static float Stabalize(this float InputValue, float MinValue, float MaxValue) // An attempt to prevent "Why my screen brack!?" Posts in #bug-report 
