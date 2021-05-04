@@ -56,33 +56,21 @@ namespace Dawn.PostProcessing
         }
         internal static void InternalSettingsRefresh()
         {
-            var debugLineCount = 0;
-            try
-            {
                 s_PostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "PostProcessing");
-                debugLineCount++;
                 s_QuickMenu = MelonPreferences.GetEntryValue<bool>(ModID, "QMToggle");
-                debugLineCount++;
                 
                 if (!s_UICreated) return; //Prevents Errors when other mods call OnPreferencesSaved();
-                debugLineCount++;
-                var ProcessLayer = MainCamera.gameObject.GetComponent<PostProcessLayer>();
-                debugLineCount++;
+                var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
                 if (ProcessLayer != null)
                 {
                     ProcessLayer.enabled = s_PostProcessing;
                 }
-                debugLineCount++;
                 
                 WorldVolumes.WorldQMToggle = MelonPreferences.GetEntryValue<bool>(ModID, "WorldQMToggle");
-                debugLineCount++;
                 WorldVolumes.WorldPostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "WorldPostProcessing");
-                debugLineCount++;
                 WorldVolumes.ToggleWorldVolumes();
-                debugLineCount++;
 
                 if (!CustomPostProcessing.m_ObjectsCreated) return;
-                debugLineCount++;
                 #region Volume Weights
                 CustomPostProcessing.s_DarkMode.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Dark-Weight") / 100).Stabalize(0, 90f);
                 CustomPostProcessing.s_Bloom.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Bloom-Weight") / 100).Stabalize(0, 100f);
@@ -109,17 +97,6 @@ namespace Dawn.PostProcessing
                 QuickMenus.QMPrefsRefresh();
                 #endif
             }
-            catch (Exception e)
-            {
-                MelonLogger.Error(e);
-                if (debugLineCount >= 8)
-                {
-                    MelonLogger.Error($"Error in line {debugLineCount}");
-                    return;
-                }
-                MelonLogger.Error("Error Occurred on lines greater than 9");
-            }
-        }
 
         private static float Stabalize(this float InputValue, float MinValue, float MaxValue) // An attempt to prevent "Why my screen brack!?" Posts in #bug-report 
         {
@@ -257,7 +234,7 @@ namespace Dawn.PostProcessing
         {
             get
             {
-                if (MainCameraCache != null) return MainCameraCache;
+                if (MainCameraCache is not null) return MainCameraCache;
                 if (Camera.main is not null && Camera.main.gameObject.GetComponent<SteamVR_Camera>() != null)
                 {
                     return Camera.main;
