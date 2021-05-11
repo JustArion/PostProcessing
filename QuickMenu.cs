@@ -11,7 +11,7 @@ namespace Dawn.PostProcessing
         private const float QMX = 2.7f;
         private const float QMY = 1.8f;
         
-        internal static QMToggleButton TPPQM;
+        private static QMToggleButton TPPQM;
 
         internal static void InitQM()
         {
@@ -26,7 +26,7 @@ namespace Dawn.PostProcessing
                 }
                 MelonPreferences.SetEntryValue(Core.ModID, "PostProcessing", true);
                 Core.s_PostProcessing = true;
-                Core.LayerChange();
+                Core.LayerChange().Coroutine();
             }, "OFF", () =>
             {
                 if (WorldVolumes.WorldQMToggle)
@@ -38,7 +38,7 @@ namespace Dawn.PostProcessing
                 }
                 MelonPreferences.SetEntryValue(Core.ModID, "PostProcessing", false);
                 Core.s_PostProcessing = false;
-                Core.LayerChange();
+                Core.LayerChange().Coroutine();
             }, "Post Processing");
             
             TPPQM.btnOff.SetSizeButtonfor(QMX, QMY);

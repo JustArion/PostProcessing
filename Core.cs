@@ -16,7 +16,7 @@ namespace Dawn.PostProcessing
         internal static bool s_UICreated = false;
         internal static bool s_PostProcessing;
         internal static bool s_QuickMenu;
-        
+        internal static MelonCoroutines Coroutine(this IEnumerator routine) => MelonCoroutines.Start(routine) as MelonCoroutines;
         private static bool isInstantiated => CurrentUser != null && IsInWorld;
         internal static bool IsInWorld => currentRoom != null || currentWorldInstance != null;
         
@@ -61,10 +61,7 @@ namespace Dawn.PostProcessing
                 
                 if (!s_UICreated) return; //Prevents Errors when other mods call OnPreferencesSaved();
                 var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
-                if (ProcessLayer != null)
-                {
-                    ProcessLayer.enabled = s_PostProcessing;
-                }
+                if (ProcessLayer != null) ProcessLayer.enabled = s_PostProcessing; 
                 
                 WorldVolumes.WorldQMToggle = MelonPreferences.GetEntryValue<bool>(ModID, "WorldQMToggle");
                 WorldVolumes.WorldPostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "WorldPostProcessing");
@@ -106,11 +103,16 @@ namespace Dawn.PostProcessing
             }
             return InputValue <= MinValue ? MinValue : InputValue;
         }
-        internal static void LayerChange()
+        internal static IEnumerator LayerChange()
         {
-            var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
-            if (ProcessLayer == null) return;
-            ProcessLayer.enabled = s_PostProcessing;
+            // 25 Second Timeout
+            for (int i = 0; i < 25; i++)
+            {
+                var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
+                if (ProcessLayer == null) { yield return new WaitForSeconds(1); continue; }
+                ProcessLayer.enabled = s_PostProcessing;
+                yield break;
+            }
         }
         
 

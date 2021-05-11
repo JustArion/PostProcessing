@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-using UnityEngine.UI;
 using static MelonLoader.MelonLogger;
 
 namespace Dawn.PostProcessing
@@ -43,17 +41,17 @@ namespace Dawn.PostProcessing
                 case 1:
                     break;
                 default:
-                    MelonCoroutines.Start(Core.WorldJoinedCoroutine());
+                    Core.WorldJoinedCoroutine().Coroutine();
                     break;
             }
         }
 
         internal static void OnWorldJoin()
         {
-            Core.LayerChange(); // This Changes Toggles it if there's a layer before I create one.
+            Core.LayerChange().Coroutine(); // This Changes Toggles it if there's a layer before I create one.
             WorldVolumes.WorldJoin();
             CustomPostProcessing.GrabLayer(); // Grabs Current Volume Render Layer (Some Worlds use different layers)
-            CustomPostProcessing.WorldJoin(); // This creates one.
+            CustomPostProcessing.WorldJoin().Coroutine(); // This creates one.
         }
 
         public override void VRChat_OnUiManagerInit()
@@ -61,8 +59,8 @@ namespace Dawn.PostProcessing
         #if QM
             QuickMenus.InitQM();
         #endif
-            
-            MelonCoroutines.Start(Assets.LoadAssets());
+
+            Assets.LoadAssets().Coroutine();
             CustomPostProcessing.CreateProcessingObjects();
             Core.InternalSettingsRefresh(); // Object Sync
         }

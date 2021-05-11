@@ -61,7 +61,7 @@ namespace RubyButtonAPI
             else
             {
                 setBackgroundColor(new Color(0.5f, 0.5f, 0.5f, 1), false);
-                setTextColor(new Color(0.7f, 0.7f, 0.7f, 1), false); ;
+                setTextColor(new Color(0.7f, 0.7f, 0.7f, 1), false);
             }
             button.gameObject.GetComponent<Button>().interactable = isIntractable;
         }
@@ -477,10 +477,7 @@ namespace RubyButtonAPI
         }
 
         // Fetch the Quick Menu instance
-        public static QuickMenu GetQuickMenuInstance()
-        {
-            return quickmenuInstance ??= Dawn.PostProcessing.Core.instance;
-        }
+        public static QuickMenu GetQuickMenuInstance() => quickmenuInstance ??= Dawn.PostProcessing.Core.instance;
 
         // Cache the FieldInfo for getting the current page. Hope to god this works!
         private static FieldInfo currentPageGetter;
