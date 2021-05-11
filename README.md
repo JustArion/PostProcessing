@@ -45,6 +45,31 @@ Planned for [2.1](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.1) 
 
 ![Post-Processing-2.0-Preview](https://cdn.discordapp.com/attachments/826459638383640617/829086300148990052/VRChat-Dawn-1402-819-3Q.png)
 
+//Credit To: KortiBoi - https://github.com/KortyBoi/ComponentToggle/blob/main/README.md
+### MelonPreferences.cfg (Default Values)
+```ini
+[PostProcessing]
+PostProcessing = true
+QMToggle = true
+WorldQMToggle = false
+WorldPostProcessing = true
+Dark-Mode = false
+Bloom = false
+Saturation = false
+Contrast = false
+Temperature = false
+Dark-Weight = 50
+Bloom-Weight = 75
+Saturation-Weight = 100
+Contrast-Weight = 50
+Temperature-Weight = 50
+DarknessValue = 50
+BloomValue = 20
+ContrastValue = 25
+SaturationValue = 50
+TemperatureValue = 45
+```
+<br>
 
 ### Extra
 
