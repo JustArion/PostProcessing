@@ -19,7 +19,7 @@ namespace Dawn.PostProcessing
         
         private static bool isInstantiated => CurrentUser != null && IsInWorld;
         internal static bool IsInWorld => currentRoom != null || currentWorldInstance != null;
-
+        
         internal static void RegisterSettings()
         {
             MelonPreferences.CreateCategory(ModID, "Post Processing");
@@ -108,7 +108,7 @@ namespace Dawn.PostProcessing
         }
         internal static void LayerChange()
         {
-            var ProcessLayer = MainCamera.gameObject.GetComponent<PostProcessLayer>();
+            var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
             if (ProcessLayer == null) return;
             ProcessLayer.enabled = s_PostProcessing;
         }

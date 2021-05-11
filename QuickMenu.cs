@@ -40,6 +40,7 @@ namespace Dawn.PostProcessing
                 Core.s_PostProcessing = false;
                 Core.LayerChange();
             }, "Post Processing");
+            
             TPPQM.btnOff.SetSizeButtonfor(QMX, QMY);
             TPPQM.btnOn.SetSizeButtonfor(QMX, QMY);
             TPPQM.getGameObject().SetSizeButtonfor(1.9f, 1.8f);
