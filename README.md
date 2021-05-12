@@ -45,7 +45,7 @@ Planned for [2.1](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.1) 
 
 ![Post-Processing-2.0-Preview](https://cdn.discordapp.com/attachments/826459638383640617/829086300148990052/VRChat-Dawn-1402-819-3Q.png)
 
-//Credit To: KortiBoi - https://github.com/KortyBoi/ComponentToggle/blob/main/README.md
+<!--- Credit To: KortiBoi - https://github.com/KortyBoi/ComponentToggle/blob/main/README.md --->
 ### MelonPreferences.cfg (Default Values)
 ```ini
 [PostProcessing]
@@ -87,5 +87,5 @@ Special Thanks to Zayku for Testing VR!
 
 
 ### Disclaimer
-
+<!--- Credit UnityExplorer for Disclaimer base --->
 PostProcessing is in no way associated with Unity Technologies. "Unity", Unity logos, and other Unity trademarks are trademarks or registered trademarks of Unity Technologies or its affiliates in the U.S. and elsewhere.
