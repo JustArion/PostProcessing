@@ -84,3 +84,8 @@ Special Thanks to Zayku for Testing VR!
       <img align="left" width="365" src="https://github-readme-stats.vercel.app/api?username=Arion-Kun&show_icons=true&include_all_commits=true&show_icons=true&title_color=fff&icon_color=303030&text_color=fff&bg_color=303030&hide_border=false" alt="Stats were supposed to load here but did not ¯\_(ツ)_/¯" />
     </a>
   </p>
+
+
+### Disclaimer
+
+PostProcessing is in no way associated with Unity Technologies. "Unity", Unity logos, and other Unity trademarks are trademarks or registered trademarks of Unity Technologies or its affiliates in the U.S. and elsewhere.
