@@ -4,14 +4,14 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace Dawn.PostProcessing.PostProcessObjects
 {
-    internal class CustomVolume : CustomPostProcessing // Priority Limit: 1223 - 1250
+    public class CustomVolume  // Priority Limit: 1223 - 1250
     {
-        internal CustomVolume(string name, PostProcessProfile profile, float defaultWeight = 0f, bool enabled = true)
+        public CustomVolume(string name, PostProcessProfile profile, float defaultWeight = 0f, bool enabled = true)
         {
             gameObject = new GameObject(name) {layer = 21};
             // Post Processing seems to work on Layers:
             // 4, 21, 29
-            gameObject.SetParent(Base);
+            gameObject.SetParent(CustomPostProcessing.Base);
             
             m_PostProcessVolume = gameObject.AddComponent<PostProcessVolume>();
             m_PostProcessVolume.priority = 1223;

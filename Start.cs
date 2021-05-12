@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -14,7 +15,7 @@ namespace Dawn.PostProcessing
 
         internal const string Name = "PostProcessing";
 
-        internal const string Version = "2.0.2";
+        internal const string Version = "2.0.3";
     }
     internal sealed class Start : MelonMod
     {
@@ -50,8 +51,9 @@ namespace Dawn.PostProcessing
         {
             Core.LayerChange().Coroutine(); // This Changes Toggles it if there's a layer before I create one.
             WorldVolumes.WorldJoin();
-            CustomPostProcessing.GrabLayer(); // Grabs Current Volume Render Layer (Some Worlds use different layers)
+            CustomPostProcessing.GrabLayer().Coroutine(); // Grabs Current Volume Render Layer (Some Worlds use different layers)
             CustomPostProcessing.WorldJoin().Coroutine(); // This creates one.
+
         }
 
         public override void VRChat_OnUiManagerInit()

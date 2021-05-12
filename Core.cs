@@ -111,7 +111,7 @@ namespace Dawn.PostProcessing
                 var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
                 if (ProcessLayer == null) { yield return new WaitForSeconds(1); continue; }
                 ProcessLayer.enabled = s_PostProcessing;
-                yield break;
+                break;
             }
         }
         

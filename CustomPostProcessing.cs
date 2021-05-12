@@ -91,8 +91,8 @@ namespace Dawn.PostProcessing
         // private static LayerMask CachedWorldJoinMask;
         internal static IEnumerator WorldJoin()
         {
-            //25 Second Timeout
-            for (int i = 0; i < 25; i++)
+            //10 Second Timeout
+            for (int i = 0; i < 10; i++)
             {
                 var PPL = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
                 if (PPL != null)
@@ -111,7 +111,7 @@ namespace Dawn.PostProcessing
                 // }
                 Log("World is detected to contain no PostProcessLayer. Adding one manually.");
                 SetupPostProcessing().Coroutine();
-                yield break;
+                break;
             }
         }
 
@@ -122,18 +122,24 @@ namespace Dawn.PostProcessing
             set => m_CachedResources = value;
         }
 
-        internal static void GrabLayer()
+        internal static IEnumerator GrabLayer()
         {
-            var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
-            if (ProcessLayer != null) return;
-
-            var postProcessVolume = Object.FindObjectsOfType<PostProcessVolume>().FirstOrDefault(v => v.priority is < 1223 or > 1250); // My Mod Range
-            if (postProcessVolume == null) return;
-            foreach (var x in CustomVolume.instances)
+            //25 Second Timeout
+            for (int i = 0; i < 25; i++)
             {
-                x.gameObject.layer = postProcessVolume.gameObject.layer;
+                var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
+                if (ProcessLayer == null) { yield return new WaitForSeconds(1); continue;  }
+
+                var postProcessVolume = Object.FindObjectsOfType<PostProcessVolume>().FirstOrDefault(v => v.priority is < 1223 or > 1250); // My Mod Range
+                if (postProcessVolume == null) { yield return new WaitForSeconds(1); continue; }
+                
+                foreach (var x in CustomVolume.instances)
+                {
+                    x.gameObject.layer = postProcessVolume.gameObject.layer;
+                }
+                Log($"PostProcessing  has been set to Layer {postProcessVolume.gameObject.layer}");
+                break;
             }
-            Log($"PostProcessing  has been set to Layer {postProcessVolume.gameObject.layer}");
         }
         private static IEnumerator SetupPostProcessing()
         {
@@ -163,6 +169,7 @@ namespace Dawn.PostProcessing
                 PPL.volumeLayer = ~LayerMask.GetMask(new[]{"UI", "UiMenu"}); // This sadly doesn't work rn :/
                 //LayerMask.GetMask(m_LayerArray); //-1; //LayerMask.GetMask(m_LayerArray); // Gonna Try To Make this work @ Some Point
                 PPL.enabled = s_PostProcessing;
+                break;
             }
         }
 
