@@ -30,15 +30,15 @@ namespace Dawn.PostProcessing.PostProcessObjects
         }
 
         internal static readonly List<CustomVolume> instances = new();
-        internal readonly GameObject gameObject;
+        public readonly GameObject gameObject;
 
-        internal bool enabled
+        public bool enabled
         {
             get => m_PostProcessVolume.enabled;
             set => m_PostProcessVolume.enabled = value;
         }
-        internal PostProcessVolume m_PostProcessVolume { get; }
-        internal PostProcessProfile m_PostProcessProfile
+        public PostProcessVolume m_PostProcessVolume { get; }
+        public PostProcessProfile m_PostProcessProfile
         {
             get => m_PostProcessVolume.sharedProfile;
             private set
