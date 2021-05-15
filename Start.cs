@@ -15,7 +15,7 @@ namespace Dawn.PostProcessing
 
         internal const string Name = "PostProcessing";
 
-        internal const string Version = "2.0.3";
+        internal const string Version = "2.0.5";
     }
     internal sealed class Start : MelonMod
     {
