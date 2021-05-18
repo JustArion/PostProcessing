@@ -18,6 +18,11 @@
 
 [![Download](https://img.shields.io/badge/%20-Download-darkgreen?style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/releases/latest)
 
+### Relevant Canny Link(s)
+
+https://feedback.vrchat.com/feature-requests/p/toggle-to-disable-bloom-and-other-post-process-effects
+
+
 ### Changelog
 Whats New:
 > Release: [2.0](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.0)
