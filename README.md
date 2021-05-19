@@ -24,7 +24,7 @@ https://feedback.vrchat.com/feature-requests/p/toggle-to-disable-bloom-and-other
 
 
 ### Changelog
-Whats New:
+Latest Content Update:
 > Release: [2.0](https://github.com/Arion-Kun/PostProcessing/releases/tag/2.0)
 >
 > Complete Rewrite.
@@ -93,4 +93,4 @@ Special Thanks to Zayku for Testing VR!
 
 ### Disclaimer
 <!--- Credit UnityExplorer for Disclaimer base --->
-PostProcessing is in no way associated with Unity Technologies. "Unity", Unity logos, and other Unity trademarks are trademarks or registered trademarks of Unity Technologies or its affiliates in the U.S. and elsewhere.
+PostProcessing+ is in no way associated with Unity Technologies. "Unity", Unity logos, and other Unity trademarks are trademarks or registered trademarks of Unity Technologies or its affiliates in the U.S. and elsewhere.
