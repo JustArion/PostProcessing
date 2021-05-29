@@ -17,20 +17,20 @@ namespace Dawn.PostProcessing
                 
                 var x = AssetBundle.LoadFromMemoryAsync_Internal(resourceStream, 0);
 
+                while (x?.assetBundle == null) yield return null;
                 m_AssetBundle = x.assetBundle;
+                m_AssetBundle.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+                if (m_AssetBundle == null)
+                {
+                    Core.Log("Asset Bundle is null!", Core.LogType.Error);
+                    yield break;
+                }
 
                 Core.Log(
                     m_AssetBundle == x.assetBundle
                         ? "Asset Resource Stream Successfully Generated a Functional AssetBundle."
                         : "Asset Resource Stream Failed to Generate a Functional AssetBundle.",
                     m_AssetBundle == x.assetBundle ? Core.LogType.Log : Core.LogType.Error);
-
-                if (m_AssetBundle == null)
-                {
-                    Core.Log("Asset Bundle is null!", Core.LogType.Error);
-                    yield break;
-                }
-                m_AssetBundle.hideFlags |= HideFlags.DontUnloadUnusedAsset;
                 
                 GenerateInstances();
             }

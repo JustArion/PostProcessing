@@ -1,4 +1,5 @@
-﻿using MelonLoader;
+﻿using System;
+using MelonLoader;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using BuildInfo = Dawn.PostProcessing.BuildInfo;
@@ -21,6 +22,7 @@ using BuildInfo = Dawn.PostProcessing.BuildInfo;
 
 [assembly: MelonInfo(typeof(Dawn.PostProcessing.Start), BuildInfo.Name, BuildInfo.Version, BuildInfo.Author, BuildInfo.DownloadLink)]
 [assembly: MelonGame("VRChat", "VRChat")]
+[assembly: MelonColor(ConsoleColor.DarkCyan)]
 
 //Optional Dependencies
 [assembly: MelonOptionalDependencies("UIExpansionKit")] 

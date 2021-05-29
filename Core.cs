@@ -60,7 +60,7 @@ namespace Dawn.PostProcessing
                 s_QuickMenu = MelonPreferences.GetEntryValue<bool>(ModID, "QMToggle");
                 
                 if (!s_UICreated) return; //Prevents Errors when other mods call OnPreferencesSaved();
-                var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
+                var ProcessLayer = MainCamera != null ? MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null : null;
                 if (ProcessLayer != null) ProcessLayer.enabled = s_PostProcessing; 
                 
                 WorldVolumes.WorldQMToggle = MelonPreferences.GetEntryValue<bool>(ModID, "WorldQMToggle");
@@ -170,14 +170,21 @@ namespace Dawn.PostProcessing
                 return QuickMenuInstanceCache;
             }
         }
+
+        internal static bool Running;
+        internal static DateTime CoroutineInitiationTime;
         internal static IEnumerator WorldJoinedCoroutine()
         {
+            CoroutineInitiationTime = DateTime.Now;
+            if (Running) yield break; // Prevents Coroutine Running multiple times if WorldJoin is diverted.
+            Running = true;
+            var sw = new Stopwatch();
+            sw.Start();
             for (;;)
             {
-                var sw = new Stopwatch();
-                sw.Start();
                 if (isInstantiated)
                 {
+                    Running = false;
                     yield return new WaitForSeconds(1);
                     {
                         Start.OnWorldJoin();
@@ -188,6 +195,7 @@ namespace Dawn.PostProcessing
 
                 if (sw.Elapsed.Seconds >= 100) // This should never happen but a check for it is in place just in case.
                 {
+                    Running = false;
                     MelonLogger.Warning("WorldJoinedCoroutine took too long and was stopped.");
                     yield break;
                 }

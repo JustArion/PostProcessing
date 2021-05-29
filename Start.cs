@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using MelonLoader;
 using UnityEngine;
@@ -13,9 +14,9 @@ namespace Dawn.PostProcessing
         internal const string Company = null;
         internal const string DownloadLink = "https://github.com/Arion-Kun/TogglePostProcessing/releases/";
 
-        internal const string Name = "PostProcessing";
+        internal const string Name = "PostProcessing+";
 
-        internal const string Version = "2.0.5";
+        internal const string Version = "2.0.6";
     }
     internal sealed class Start : MelonMod
     {
@@ -23,9 +24,29 @@ namespace Dawn.PostProcessing
         {
             Core.RegisterSettings();
             
-            UIXAdvert();
+            if (MelonHandler.Mods.Any(mod => mod.Info.Name == "UI Expansion Kit" && VersionCheck(mod.Info.Version, "0.3.0")))
+            {
+                // Subscribe here to add my actual UiManagerInit method for my mod
+                // += UiManagerInit;
+                Msg("Utilizing UI Expansion Kit Event");
+                UIExpansionKit.API.ExpansionKitApi.OnUiManagerInit += () => { VRChat_OnUiManagerInitCoroutine().Coroutine(); };
+            }
+            else if (MelonHandler.Mods.Any(mod => mod.Info.Name == "UI Expansion Kit"))
+            {
+                VRChat_OnUiManagerInitCoroutine().Coroutine();
+            }
+            else
+            {
+                UIXAdvert();
+                VRChat_OnUiManagerInitCoroutine().Coroutine();
+            }
         }
-
+        private bool VersionCheck(string modVersion, string greaterOrEqual)
+        {
+            if (modVersion == greaterOrEqual) return true;
+            if (Version.TryParse(modVersion, out var owo) && Version.TryParse(greaterOrEqual, out var uwu)) return owo.CompareTo(uwu) < 0;
+            return false;
+        }
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
         {
             if (buildIndex != 0) return; // PPR = <PostProcessResources>
@@ -56,8 +77,20 @@ namespace Dawn.PostProcessing
 
         }
 
-        public override void VRChat_OnUiManagerInit()
-        { Core.s_UICreated = true;
+        private static bool? IEnumeratorCalled = false;
+        private static IEnumerator VRChat_OnUiManagerInitCoroutine()
+        {
+            if (IEnumeratorCalled == null || (bool) IEnumeratorCalled) yield break;
+            IEnumeratorCalled = true;
+            while (typeof(VRCUiManager).GetProperties().FirstOrDefault(p => p.PropertyType == typeof(VRCUiManager))?.GetValue(null) == null) yield return null;
+            VRChat_OnUiManagerInit();
+            IEnumeratorCalled = null; // yeet
+        }
+
+        private static void VRChat_OnUiManagerInit()
+        {
+            Core.s_UICreated = true;
+            Msg("VRChat_OnUiManagerInit Sucessfully Called.");
         #if QM
             QuickMenus.InitQM();
         #endif
