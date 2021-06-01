@@ -16,13 +16,13 @@ namespace Dawn.PostProcessing
         internal static bool s_UICreated = false;
         internal static bool s_PostProcessing;
         internal static bool s_QuickMenu;
-        internal static MelonCoroutines Coroutine(this IEnumerator routine) => MelonCoroutines.Start(routine) as MelonCoroutines;
+        internal static void Coroutine(this IEnumerator routine) => MelonCoroutines.Start(routine);
         private static bool isInstantiated => CurrentUser != null && IsInWorld;
         internal static bool IsInWorld => currentRoom != null || currentWorldInstance != null;
         
         internal static void RegisterSettings()
         {
-            MelonPreferences.CreateCategory(ModID, "Post Processing");
+            MelonPreferences.CreateCategory(ModID, "Post Processing+");
             MelonPreferences.CreateEntry(ModID, "PostProcessing", true, "Enable Post Processing");
     #if QM
             MelonPreferences.CreateEntry(ModID, "QMToggle", true, "QuickMenu Toggle Button");
@@ -175,6 +175,7 @@ namespace Dawn.PostProcessing
         internal static DateTime CoroutineInitiationTime;
         internal static IEnumerator WorldJoinedCoroutine()
         {
+            if (CoroutineInitiationTime > CoroutineInitiationTime.AddSeconds(25)) Running = false; // Timeout for Running to reset.
             CoroutineInitiationTime = DateTime.Now;
             if (Running) yield break; // Prevents Coroutine Running multiple times if WorldJoin is diverted.
             Running = true;
