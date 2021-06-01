@@ -23,13 +23,16 @@ namespace Dawn.PostProcessing
         public override void OnApplicationStart()
         {
             Core.RegisterSettings();
-            
+            UIManager();
+        }
+
+        private void UIManager()
+        {
             if (MelonHandler.Mods.Any(mod => mod.Info.Name == "UI Expansion Kit" && VersionCheck(mod.Info.Version, "0.3.0")))
             {
-                // Subscribe here to add my actual UiManagerInit method for my mod
-                // += UiManagerInit;
-                Msg("Utilizing UI Expansion Kit Event");
                 UIExpansionKit.API.ExpansionKitApi.OnUiManagerInit += () => { VRChat_OnUiManagerInitCoroutine().Coroutine(); };
+                Msg("Utilizing UI Expansion Kit Event.");
+
             }
             else if (MelonHandler.Mods.Any(mod => mod.Info.Name == "UI Expansion Kit"))
             {
@@ -41,6 +44,8 @@ namespace Dawn.PostProcessing
                 VRChat_OnUiManagerInitCoroutine().Coroutine();
             }
         }
+        
+
         private bool VersionCheck(string modVersion, string greaterOrEqual)
         {
             if (modVersion == greaterOrEqual) return true;
