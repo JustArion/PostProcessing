@@ -89,8 +89,10 @@ namespace Dawn.PostProcessing
         }
 
         // private static LayerMask CachedWorldJoinMask;
+        internal static bool hasNativePostProcessing;
         internal static IEnumerator WorldJoin()
         {
+            hasNativePostProcessing = true;
             //10 Second Timeout
             for (int i = 0; i < 10; i++)
             {
@@ -110,6 +112,7 @@ namespace Dawn.PostProcessing
                 //     return;
                 // }
                 Log("World is detected to contain no PostProcessLayer. Adding one manually.");
+                hasNativePostProcessing = false;
                 SetupPostProcessing().Coroutine();
                 break;
             }
