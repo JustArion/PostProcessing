@@ -16,7 +16,7 @@ namespace Dawn.PostProcessing
 
         internal const string Name = "PostProcessing+";
 
-        internal const string Version = "2.0.6";
+        internal const string Version = "2.0.7";
     }
     internal sealed class Start : MelonMod
     {
@@ -46,10 +46,9 @@ namespace Dawn.PostProcessing
         }
         
 
-        private bool VersionCheck(string modVersion, string greaterOrEqual)
+        private static bool VersionCheck(string modVersion, string greaterOrEqual)
         {
-            if (modVersion == greaterOrEqual) return true;
-            if (Version.TryParse(modVersion, out var owo) && Version.TryParse(greaterOrEqual, out var uwu)) return owo.CompareTo(uwu) < 0;
+            if (Version.TryParse(modVersion, out var owo) && Version.TryParse(greaterOrEqual, out var uwu)) return uwu.CompareTo(owo) <= 0;
             return false;
         }
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)

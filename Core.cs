@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +8,8 @@ using MelonLoader;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using VRC.Core;
+using VRC.UserCamera;
+using Object = UnityEngine.Object;
 
 namespace Dawn.PostProcessing
 {
@@ -56,44 +59,75 @@ namespace Dawn.PostProcessing
         }
         internal static void InternalSettingsRefresh()
         {
+            var debugList = new List<string>();
+            try
+            {
                 s_PostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "PostProcessing");
                 s_QuickMenu = MelonPreferences.GetEntryValue<bool>(ModID, "QMToggle");
                 
                 if (!s_UICreated) return; //Prevents Errors when other mods call OnPreferencesSaved();
                 var ProcessLayer = MainCamera != null ? MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null : null;
-                if (ProcessLayer != null) ProcessLayer.enabled = s_PostProcessing; 
-                
+                if (ProcessLayer != null) ProcessLayer.enabled = s_PostProcessing; debugList.Add("Camera");
                 WorldVolumes.WorldQMToggle = MelonPreferences.GetEntryValue<bool>(ModID, "WorldQMToggle");
                 WorldVolumes.WorldPostProcessing = MelonPreferences.GetEntryValue<bool>(ModID, "WorldPostProcessing");
-                WorldVolumes.ToggleWorldVolumes();
-
+                WorldVolumes.ToggleWorldVolumes(); debugList.Add("Volumes");
                 if (!CustomPostProcessing.m_ObjectsCreated) return;
-                #region Volume Weights
-                CustomPostProcessing.s_DarkMode.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Dark-Weight") / 100).Stabalize(0, 90f);
-                CustomPostProcessing.s_Bloom.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Bloom-Weight") / 100).Stabalize(0, 100f);
-                CustomPostProcessing.s_Saturation.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Saturation-Weight") / 100).Stabalize(0, 100f);
-                CustomPostProcessing.s_Contrast.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Contrast-Weight") / 100).Stabalize(0, 90f);
-                CustomPostProcessing.s_Temperature.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Temperature-Weight") / 100).Stabalize(0, 100f);
-                #endregion
-                #region Object States
-                CustomPostProcessing.s_DarkMode.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Dark-Mode");
-                CustomPostProcessing.s_Bloom.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Bloom");
-                CustomPostProcessing.s_Saturation.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Saturation");
-                CustomPostProcessing.s_Contrast.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Contrast");
-                CustomPostProcessing.s_Temperature.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Temperature");
-                #endregion
-                #region Profile Values
-                CustomPostProcessing.m_DarknessValue = MelonPreferences.GetEntryValue<float>(ModID, "DarknessValue").Stabalize(0, 100);
-                CustomPostProcessing.m_BloomValue = MelonPreferences.GetEntryValue<float>(ModID, "BloomValue").Stabalize(0, 100);
-                CustomPostProcessing.m_ContrastValue = MelonPreferences.GetEntryValue<float>(ModID, "ContrastValue").Stabalize(-90, 90);
-                CustomPostProcessing.m_SaturationValue = MelonPreferences.GetEntryValue<float>(ModID, "SaturationValue").Stabalize(-100, 100);
-                CustomPostProcessing.m_TemperatureValue = MelonPreferences.GetEntryValue<float>(ModID, "TemperatureValue").Stabalize(-100, 100);
-                #endregion
-            
-                #if QM
+                UpdateWeights(); debugList.Add("Weights");
+                UpdateStates(); debugList.Add("States");
+                UpdateProfiles(); debugList.Add("Profiles");
+
+            #if QM
                 QuickMenus.QMPrefsRefresh();
-                #endif
+            #endif
             }
+            catch (Exception e)
+            {
+                MelonLogger.Error(e);
+                MelonLogger.Error("Please Post your Latest.Log in the VRCMG Discord and @Mention arion#1223 Please.");
+                MelonLogger.Error("Debug Dump:");
+                
+                if (debugList.Count == 0)
+                {
+                    MelonLogger.Error("Pre Camera");
+                    return;
+                }
+                foreach (var debugEntry in debugList)
+                {
+                    MelonLogger.Error( "Entry: " + debugEntry + "Checked.");
+                    if (debugEntry == "Profiles")
+                    {
+                        MelonLogger.Error("QMPrefs!!");
+                    }
+                }
+            }
+        }
+
+        private static void UpdateWeights()
+        {
+            CustomPostProcessing.s_DarkMode.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Dark-Weight") / 100).Stabalize(0, 90f);
+            CustomPostProcessing.s_Bloom.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Bloom-Weight") / 100).Stabalize(0, 100f);
+            CustomPostProcessing.s_Saturation.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Saturation-Weight") / 100).Stabalize(0, 100f);
+            CustomPostProcessing.s_Contrast.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Contrast-Weight") / 100).Stabalize(0, 90f);
+            CustomPostProcessing.s_Temperature.m_PostProcessVolume.weight = (MelonPreferences.GetEntryValue<float>(ModID, "Temperature-Weight") / 100).Stabalize(0, 100f);
+        }
+
+        private static void UpdateStates()
+        {
+            CustomPostProcessing.s_DarkMode.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Dark-Mode");
+            CustomPostProcessing.s_Bloom.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Bloom");
+            CustomPostProcessing.s_Saturation.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Saturation");
+            CustomPostProcessing.s_Contrast.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Contrast");
+            CustomPostProcessing.s_Temperature.enabled = MelonPreferences.GetEntryValue<bool>(ModID, "Temperature");
+        }
+
+        private static void UpdateProfiles()
+        {
+            CustomPostProcessing.m_DarknessValue = MelonPreferences.GetEntryValue<float>(ModID, "DarknessValue").Stabalize(0, 100);
+            CustomPostProcessing.m_BloomValue = MelonPreferences.GetEntryValue<float>(ModID, "BloomValue").Stabalize(0, 100);
+            CustomPostProcessing.m_ContrastValue = MelonPreferences.GetEntryValue<float>(ModID, "ContrastValue").Stabalize(-90, 90);
+            CustomPostProcessing.m_SaturationValue = MelonPreferences.GetEntryValue<float>(ModID, "SaturationValue").Stabalize(-100, 100);
+            CustomPostProcessing.m_TemperatureValue = MelonPreferences.GetEntryValue<float>(ModID, "TemperatureValue").Stabalize(-100, 100);
+        }
 
         private static float Stabalize(this float InputValue, float MinValue, float MaxValue) // An attempt to prevent "Why my screen brack!?" Posts in #bug-report 
         {
@@ -103,6 +137,31 @@ namespace Dawn.PostProcessing
             }
             return InputValue <= MinValue ? MinValue : InputValue;
         }
+
+        private static UserCameraController cachedController;
+        private static UserCameraController controller => cachedController ??= Object.FindObjectOfType<UserCameraController>();
+
+        private static Transform tryGetUserCamera
+        {
+            get
+            {
+                try
+                {
+                    if (controller != null) return controller.transform;
+                }
+                catch (TypeLoadException) // In-Case the class gets Obfuscated.
+                {
+                    MelonLogger.Warning("<UserCameraController> Could not be Found, utilizing fallback.");
+                    return GameObject.Find("_Application/TrackingVolume/PlayerObjects/UserCamera").transform;
+                }
+                MelonLogger.Error("Unable to Find UserCameraController GameObject.");
+                return null;
+            }
+        }
+        private static Transform cachedPhotoCamera;
+        private static Transform PhotoCamera => cachedPhotoCamera ??= tryGetUserCamera.Find("PhotoCamera");
+        private static Transform cachedVideoCamera;
+        private static Transform VideoCamera => cachedVideoCamera ??= PhotoCamera.Find("VideoCamera");
         internal static IEnumerator LayerChange()
         {
             // 25 Second Timeout
@@ -111,6 +170,18 @@ namespace Dawn.PostProcessing
                 var ProcessLayer = MainCamera.gameObject != null ? MainCamera.gameObject.GetComponent<PostProcessLayer>() : null;
                 if (ProcessLayer == null) { yield return new WaitForSeconds(1); continue; }
                 ProcessLayer.enabled = s_PostProcessing;
+                if (CustomPostProcessing.hasNativePostProcessing)
+                {
+                    if (controller == null) continue; if (PhotoCamera == null) continue; if (VideoCamera == null) continue;
+                    
+                    var photoCameraPostProcessLayer = PhotoCamera.gameObject != null ? PhotoCamera.gameObject.GetComponent<PostProcessLayer>() : null;
+                    var videoCameraPostProcessLayer = VideoCamera.gameObject != null ? VideoCamera.gameObject.GetComponent<PostProcessLayer>() : null;
+                    if (photoCameraPostProcessLayer != null)
+                    {
+                        photoCameraPostProcessLayer.enabled = s_PostProcessing;
+                        if (videoCameraPostProcessLayer != null) videoCameraPostProcessLayer.enabled = s_PostProcessing;
+                    }
+                }
                 break;
             }
         }

@@ -12,6 +12,7 @@ namespace Dawn.PostProcessing
         private const float QMY = 1.8f;
         
         private static QMToggleButton TPPQM;
+        private static bool QMInit;
 
         internal static void InitQM()
         {
@@ -58,10 +59,12 @@ namespace Dawn.PostProcessing
             TPPQM.setToggleState(Core.s_PostProcessing);
             TPPQM.setActive(Core.s_QuickMenu);
             TPPQM.getGameObject().name = "Post-Processing";
+            QMInit = true;
         }
 
         internal static void QMPrefsRefresh()
         {
+            if (!QMInit) return;
             if (!Core.s_UICreated) return;
             TPPQM.setActive(Core.s_QuickMenu);
             if (WorldVolumes.WorldQMToggle)
