@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using MelonLoader;
 using UnityEngine;
@@ -16,7 +19,7 @@ namespace Dawn.PostProcessing
 
         internal const string Name = "PostProcessing+";
 
-        internal const string Version = "2.0.7";
+        internal const string Version = "2.0.8";
     }
     internal sealed class Start : MelonMod
     {
@@ -91,7 +94,7 @@ namespace Dawn.PostProcessing
             IEnumeratorCalled = null; // yeet
         }
 
-        private static void VRChat_OnUiManagerInit()
+        private new static void VRChat_OnUiManagerInit()
         {
             Core.s_UICreated = true;
             Msg("VRChat_OnUiManagerInit Sucessfully Called.");
@@ -104,7 +107,11 @@ namespace Dawn.PostProcessing
             Core.InternalSettingsRefresh(); // Object Sync
         }
 
-        public override void OnPreferencesSaved() => Core.InternalSettingsRefresh();
+        public override void OnPreferencesSaved() { if (GracefulExit) return; Core.InternalSettingsRefresh(); }
+        public override void OnApplicationQuit() => GracefulExit = true;
+        // Thanks NekoMdNight#1401 saying "postprocessing+ seems to not exit very well when you exit vrchat." 
+        // Hopefully this will solve potential race conditions for AppQuit if AppQuit destroys all GameObjects in DoNotDestroy;
+        private bool GracefulExit;
 
         private static void UIXAdvert()
         {
