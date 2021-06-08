@@ -208,12 +208,66 @@ namespace Dawn.PostProcessing
 
             return null;
         }
+        private static PropertyInfo FindProperty(IReflect WhereLooking, Type WhatLooking)
+        {
+            try
+            {
+                var propertyInfos = WhereLooking.GetProperties(BindingFlags.Public | BindingFlags.Static)
+                    .Where(m => m.PropertyType == WhatLooking).ToArray();
+                if (propertyInfos.Length > 0)
+                {
+                    foreach(var pinfo in propertyInfos)
+                    {
+                        if (!pinfo.Name.StartsWith("prop_")) continue;
+                        return pinfo;
+                    }
+
+                    Console.WriteLine("debug: found " + WhereLooking + " : " + WhatLooking);
+                    return propertyInfos.First();
+                }
+
+                MelonLogger.Error("[FindInstance] MethodInfo for " + WhatLooking.Name + " is null");
+            }
+            catch (Exception e)
+            {
+                MelonLogger.Error($"[FindInstance] {e}");
+            }
+
+            return null;
+        }
         internal static void SetParent(this GameObject obj, GameObject target)
         {
             obj.transform.parent = target.transform;
         }
-        private static ApiWorld currentRoom => FindInstance(typeof(RoomManager), typeof(ApiWorld)).TryCast<ApiWorld>();
-        private static ApiWorldInstance currentWorldInstance => FindInstance(typeof(RoomManager), typeof(ApiWorldInstance)).TryCast<ApiWorldInstance>();
+
+        private static PropertyInfo _propertyInfoCurrentRoom;
+
+        private static ApiWorld currentRoom
+        {
+            get
+            {
+                if (_propertyInfoCurrentRoom != null) return _propertyInfoCurrentRoom.GetMethod.Invoke(null, null) as ApiWorld;
+               _propertyInfoCurrentRoom = FindProperty(typeof(RoomManager), typeof(ApiWorld)); //FindInstance(typeof(RoomManager), typeof(ApiWorld)).TryCast<ApiWorld>();
+               if (_propertyInfoCurrentRoom != null) return _propertyInfoCurrentRoom.GetMethod.Invoke(null, null) as ApiWorld;
+               MelonLogger.Error("Unable to Find 'currentRoom' PropertyInfo");
+               return null;
+            }
+        }
+
+        private static PropertyInfo _propertyInfoCurrentWorldInstance;
+
+        private static ApiWorldInstance currentWorldInstance
+        {
+            get
+            {
+                if (_propertyInfoCurrentWorldInstance != null) return _propertyInfoCurrentWorldInstance.GetMethod.Invoke(null, null) as ApiWorldInstance;
+                _propertyInfoCurrentWorldInstance = FindProperty(typeof(RoomManager), typeof(ApiWorldInstance)); //FindInstance(typeof(RoomManager), typeof(ApiWorld)).TryCast<ApiWorld>();
+                if (_propertyInfoCurrentWorldInstance != null) return _propertyInfoCurrentWorldInstance.GetMethod.Invoke(null, null) as ApiWorldInstance;
+                MelonLogger.Error("Unable to Find 'currentWorldInstance' PropertyInfo");
+                return null;
+            }
+            //FindInstance(typeof(RoomManager), typeof(ApiWorldInstance)).TryCast<ApiWorldInstance>();
+        }
         /// <summary>
         /// Current User Instance Cache.
         /// </summary>
