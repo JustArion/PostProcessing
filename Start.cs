@@ -93,7 +93,7 @@ namespace Dawn.PostProcessing
         // Hopefully this will solve potential race conditions for AppQuit if AppQuit destroys all GameObjects in DoNotDestroy;
         private bool GracefulExit;
 
-        private void UIXAdvert()
+        private static void UIXAdvert()
         {
             Msg(@"Settings can be configured in VRChat\UserData\MelonPreferences.cfg or through 'UI Expansion Kit'");
             
