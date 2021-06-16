@@ -221,8 +221,6 @@ namespace Dawn.PostProcessing
                         if (!pinfo.Name.StartsWith("prop_")) continue;
                         return pinfo;
                     }
-
-                    Console.WriteLine("debug: found " + WhereLooking + " : " + WhatLooking);
                     return propertyInfos.First();
                 }
 

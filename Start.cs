@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using MelonLoader;
+using UIExpansionKit.API;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using static MelonLoader.MelonLogger;
@@ -26,34 +25,16 @@ namespace Dawn.PostProcessing
         public override void OnApplicationStart()
         {
             Core.RegisterSettings();
-            UIManager();
-        }
-
-        private void UIManager()
-        {
-            if (MelonHandler.Mods.Any(mod => mod.Info.Name == "UI Expansion Kit" && VersionCheck(mod.Info.Version, "0.3.0")))
-            {
-                UIExpansionKit.API.ExpansionKitApi.OnUiManagerInit += () => { VRChat_OnUiManagerInitCoroutine().Coroutine(); };
-                Msg("Utilizing UI Expansion Kit Event.");
-
-            }
-            else if (MelonHandler.Mods.Any(mod => mod.Info.Name == "UI Expansion Kit"))
-            {
-                VRChat_OnUiManagerInitCoroutine().Coroutine();
-            }
-            else
-            {
-                UIXAdvert();
-                VRChat_OnUiManagerInitCoroutine().Coroutine();
-            }
+            
+            if (MelonHandler.Mods.All(mod => mod.Info.Name != "UI Expansion Kit")) UIXAdvert();
         }
         
 
-        private static bool VersionCheck(string modVersion, string greaterOrEqual)
-        {
-            if (Version.TryParse(modVersion, out var owo) && Version.TryParse(greaterOrEqual, out var uwu)) return uwu.CompareTo(owo) <= 0;
-            return false;
-        }
+        // private bool VersionCheck(string modVersion, string greaterOrEqual)
+        // {
+        //     if (Version.TryParse(modVersion, out var owo) && Version.TryParse(greaterOrEqual, out var uwu)) return uwu.CompareTo(owo) <= 0;
+        //     return false;
+        // }
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
         {
             if (buildIndex != 0) return; // PPR = <PostProcessResources>
@@ -62,6 +43,9 @@ namespace Dawn.PostProcessing
             CustomPostProcessing.CachedResources = Resources.FindObjectsOfTypeAll<PostProcessResources>().FirstOrDefault(n => n.name == "DefaultPostProcessResources");
         }
 
+        [Credit("DDAkebono", "https://github.com/ddakebono/BTKSAImmersiveHud/blob/8b5968a7cf35398217ad14b86b316dc93fb705fe/BTKSAImmersiveHud.cs#L52")]
+        [Modified]
+        private static byte? scenesLoaded = 0;
         public override void OnSceneWasLoaded(int buildIndex, string sceneName) // World Join
         {
             switch (buildIndex) //Prevents being called 3x
@@ -73,6 +57,12 @@ namespace Dawn.PostProcessing
                     Core.WorldJoinedCoroutine().Coroutine();
                     break;
             }
+            
+            if (scenesLoaded is null or > 2) return;
+            scenesLoaded++;
+            if (scenesLoaded != 2) return;
+            VRChat_OnUiManagerInit();
+            scenesLoaded = null;
         }
 
         internal static void OnWorldJoin()
@@ -81,17 +71,7 @@ namespace Dawn.PostProcessing
             WorldVolumes.WorldJoin();
             CustomPostProcessing.GrabLayer().Coroutine(); // Grabs Current Volume Render Layer (Some Worlds use different layers)
             CustomPostProcessing.WorldJoin().Coroutine(); // This creates one.
-
-        }
-
-        private static bool? IEnumeratorCalled = false;
-        private static IEnumerator VRChat_OnUiManagerInitCoroutine()
-        {
-            if (IEnumeratorCalled == null || (bool) IEnumeratorCalled) yield break;
-            IEnumeratorCalled = true;
-            while (typeof(VRCUiManager).GetProperties().FirstOrDefault(p => p.PropertyType == typeof(VRCUiManager))?.GetValue(null) == null) yield return null;
-            VRChat_OnUiManagerInit();
-            IEnumeratorCalled = null; // yeet
+            
         }
 
         private new static void VRChat_OnUiManagerInit()
@@ -113,7 +93,7 @@ namespace Dawn.PostProcessing
         // Hopefully this will solve potential race conditions for AppQuit if AppQuit destroys all GameObjects in DoNotDestroy;
         private bool GracefulExit;
 
-        private static void UIXAdvert()
+        private void UIXAdvert()
         {
             Msg(@"Settings can be configured in VRChat\UserData\MelonPreferences.cfg or through 'UI Expansion Kit'");
             
