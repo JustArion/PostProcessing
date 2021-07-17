@@ -78,6 +78,8 @@ TemperatureValue = 45
 
 ### Extra
 
+Special Thanks to DubyaDude for the RubyButtonAPI: <a href = "https://github.com/DubyaDude/RubyButtonAPI"> Link </a>
+
 Special Thanks to Zayku for Testing VR!
 
 <a href="https://github.com/Arion-Kun/PostProcessing/releases/">
