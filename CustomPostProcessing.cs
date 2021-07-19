@@ -140,7 +140,7 @@ namespace Dawn.PostProcessing
                 {
                     x.gameObject.layer = postProcessVolume.gameObject.layer;
                 }
-                Log($"PostProcessing  has been set to Layer {postProcessVolume.gameObject.layer}");
+                Log($"PostProcessing has been set to Layer {postProcessVolume.gameObject.layer}");
                 break;
             }
         }
