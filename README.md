@@ -18,6 +18,10 @@
 
 [![Download](https://img.shields.io/badge/%20-Download-darkgreen?style=for-the-badge)](https://github.com/Arion-Kun/PostProcessing/releases/latest)
 
+### Request
+
+If you use Unity and use `PostProcessProfile`s and would like to contribute your profiles kindly let me know on Discord -> `arion#1223` or create an issue with the 'enhancement' tag. The current profiles (excluding Bloom) are basically defaults.
+
 ### Relevant Canny Link(s)
 
 https://feedback.vrchat.com/feature-requests/p/toggle-to-disable-bloom-and-other-post-process-effects
