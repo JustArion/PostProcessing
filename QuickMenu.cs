@@ -1,11 +1,12 @@
-﻿using MelonLoader;
-using RubyButtonAPI;
+﻿#if QM
+using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
 using VRCSDK2;
 
 namespace Dawn.PostProcessing
 {
+    
     internal static class QuickMenus
     {
         private const float QMX = 2.7f;
@@ -16,6 +17,7 @@ namespace Dawn.PostProcessing
 
         internal static void InitQM()
         {
+            
             TPPQM = new QMToggleButton("ShortcutMenu", 1.24f, 1.75f, "Post\nProcessing", () =>
             {
                 if (WorldVolumes.WorldQMToggle)
@@ -40,7 +42,7 @@ namespace Dawn.PostProcessing
                 MelonPreferences.SetEntryValue(Core.ModID, "PostProcessing", false);
                 Core.s_PostProcessing = false;
                 Core.LayerChange().Coroutine();
-            }, "Post Processing");
+            }, "Post Processing", Color.black);
             
             TPPQM.btnOff.SetSizeButtonfor(QMX, QMY);
             TPPQM.btnOn.SetSizeButtonfor(QMX, QMY);
@@ -53,7 +55,7 @@ namespace Dawn.PostProcessing
             TPPQM.btnOn.transform.Find("Text_ON").GetComponent<RectTransform>().localScale = new Vector3(0.8f, 0.8f, 1);
             TPPQM.btnOff.transform.Find("Text_ON").GetComponent<RectTransform>().localPosition = new Vector3(0, 65, 0);
             TPPQM.btnOff.transform.Find("Text_ON").GetComponent<RectTransform>().localScale = new Vector3(0.8f, 0.8f, 1);
-
+        
             TPPQM.getGameObject().GetComponent<RectTransform>().localScale -= new Vector3(0, 0.2f, 0);
             TPPQM.getGameObject().GetComponent<RectTransform>().anchoredPosition = new Vector2(-107.2f, -1340.8f);
             TPPQM.setToggleState(Core.s_PostProcessing);
@@ -61,7 +63,7 @@ namespace Dawn.PostProcessing
             TPPQM.getGameObject().name = "Post-Processing";
             QMInit = true;
         }
-
+        
         internal static void QMPrefsRefresh()
         {
             if (!QMInit) return;
@@ -76,3 +78,4 @@ namespace Dawn.PostProcessing
         }
     }
 }
+#endif
