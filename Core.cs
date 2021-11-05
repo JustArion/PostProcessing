@@ -282,18 +282,11 @@ namespace Dawn.PostProcessing
                 return CachedCurrentUser;
             }
         }
+        #if QM
         private static QuickMenu QuickMenuInstanceCache;
         
-        internal static QuickMenu instance
-        {
-            get
-            {
-                if (QuickMenuInstanceCache != null) return QuickMenuInstanceCache;
-                QuickMenuInstanceCache = FindInstance(typeof(QuickMenu), typeof(QuickMenu))?.TryCast<QuickMenu>();
-                return QuickMenuInstanceCache;
-            }
-        }
-
+        internal static QuickMenu instance => QuickMenuInstanceCache ??= FindInstance(typeof(QuickMenu), typeof(QuickMenu))?.TryCast<QuickMenu>();
+        #endif
         internal static bool Running;
         internal static DateTime CoroutineInitiationTime;
         internal static IEnumerator WorldJoinedCoroutine()
