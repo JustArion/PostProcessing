@@ -20,7 +20,6 @@ namespace Dawn.PostProcessing
             Object.DontDestroyOnLoad(Base);
 
             CreateCustomObjects();
-            m_ObjectsCreated = true;
         }
 
         internal static bool m_ObjectsCreated;
@@ -86,6 +85,7 @@ namespace Dawn.PostProcessing
 
             s_Temperature = new CustomVolume("Temperature", m_Temperature, 1f);
             m_Temperature = null;
+            m_ObjectsCreated = true;
         }
 
         // private static LayerMask CachedWorldJoinMask;
@@ -111,7 +111,7 @@ namespace Dawn.PostProcessing
                 //     Console.WriteLine($@"New Mask: {PPL.volumeLayer.value}");
                 //     return;
                 // }
-                Log("World is detected to contain no PostProcessLayer. Adding one manually.");
+                Log("Detected: World Contains no PostProcessLayer. Adding one manually.");
                 hasNativePostProcessing = false;
                 SetupPostProcessing().Coroutine();
                 break;
@@ -148,31 +148,30 @@ namespace Dawn.PostProcessing
         {
             if (CachedResources != null)
             {
-                Log("Using Cached <PostProcessResources>");
+                // Log("Using Cached <PostProcessResources>"); // Likely Spammed too much
+                //25 Second Timeout
+                for (int i = 0; i < 25; i++)
+                {
+                    var PPL = MainCamera.gameObject != null ? MainCamera.gameObject.AddComponent<PostProcessLayer>() : null;
+                    if (PPL == null) { yield return new WaitForSeconds(1); continue; }
+
+                    PPL.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing; // FXAA
+                    var FXAA = new FastApproximateAntialiasing {fastMode = true, keepAlpha = true};
+                    PPL.fastApproximateAntialiasing = FXAA;
+                    PPL.volumeTrigger = MainCamera.transform;
+                    PPL.m_ShowCustomSorter = true;
+                    PPL.m_Resources = CachedResources;
+
+                    PPL.volumeLayer = ~LayerMask.GetMask(new[]{"UI", "UiMenu"}); // This sadly doesn't work rn :/
+                    //LayerMask.GetMask(m_LayerArray); //-1; //LayerMask.GetMask(m_LayerArray); // Gonna Try To Make this work @ Some Point
+                    PPL.enabled = s_PostProcessing;
+                    break;
+                }
             }
             else
             { // Resources Lookup moved to OnSceneInitialize
                 MelonLogger.Error("Could not find the Resources necessary to construct Post Processing in a Non-PostProcessing World!");
                 yield break;
-            }
-
-            //25 Second Timeout
-            for (int i = 0; i < 25; i++)
-            {
-                var PPL = MainCamera.gameObject != null ? MainCamera.gameObject.AddComponent<PostProcessLayer>() : null;
-                if (PPL == null) { yield return new WaitForSeconds(1); continue; }
-
-                PPL.antialiasingMode = PostProcessLayer.Antialiasing.FastApproximateAntialiasing; // FXAA
-                var FXAA = new FastApproximateAntialiasing {fastMode = true, keepAlpha = true};
-                PPL.fastApproximateAntialiasing = FXAA;
-                PPL.volumeTrigger = MainCamera.transform;
-                PPL.m_ShowCustomSorter = true;
-                PPL.m_Resources = CachedResources;
-
-                PPL.volumeLayer = ~LayerMask.GetMask(new[]{"UI", "UiMenu"}); // This sadly doesn't work rn :/
-                //LayerMask.GetMask(m_LayerArray); //-1; //LayerMask.GetMask(m_LayerArray); // Gonna Try To Make this work @ Some Point
-                PPL.enabled = s_PostProcessing;
-                break;
             }
         }
 
