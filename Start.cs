@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using MelonLoader;
-using UIExpansionKit.API;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using static MelonLoader.MelonLogger;
@@ -18,7 +14,7 @@ namespace Dawn.PostProcessing
 
         internal const string Name = "PostProcessing+";
 
-        internal const string Version = "2.0.8";
+        internal const string Version = "2.0.9";
     }
     internal sealed class Start : MelonMod
     {
@@ -40,7 +36,8 @@ namespace Dawn.PostProcessing
             if (buildIndex != 0) return; // PPR = <PostProcessResources>
             // Hopefully throwing a Resource lookup in here so early will negate having it called later as a fallback
             // As the game's PPR should be priority 1 and my own priority 2 as a fallback if the home world upon first launch doesn't contain PPR
-            CustomPostProcessing.CachedResources = Resources.FindObjectsOfTypeAll<PostProcessResources>().FirstOrDefault(n => n.name == "DefaultPostProcessResources");
+            
+            CustomPostProcessing.CachedResources = CustomPostProcessing.CachedResources ??= Resources.FindObjectsOfTypeAll<PostProcessResources>().FirstOrDefault(n => n.name == "DefaultPostProcessResources");
         }
 
         [Credit("DDAkebono", "https://github.com/ddakebono/BTKSAImmersiveHud/blob/8b5968a7cf35398217ad14b86b316dc93fb705fe/BTKSAImmersiveHud.cs#L52")]
